@@ -1,15 +1,15 @@
 import React from 'react';
 
-export default function Channel( { name, participants, handleClick } ) {
+export default function Channel(props) {
 
-    // const handleClick = () => {
-    //     this.props.onClick(this.props.id);
-    // }
+    const click = () => {
+        props.onClick(props.id);
+    }
 
     return (
-        <div className='channel-item' onClick={handleClick}>
-            <div>{name}</div>
-            <span>{participants}</span>
+        <div className='channel-item' onClick={click}>
+            <div>{props.name}</div>
+            <span>{props.participants}</span>
         </div>
     )
    

@@ -1,12 +1,12 @@
 html, body {
-    background: #111111;
+    background: #222222;
 }
 
 .chat-app {
-    width: 100%;
-    height: 100%;
+    width: 95vw;
+    height: 95vh;
     display: flex;
-    background: #222222;
+    background: #333333;
 
     .no-content-message {
         color: #cccccc;

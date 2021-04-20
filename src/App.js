@@ -1,26 +1,55 @@
 import './App.css';
-// https://www.valentinog.com/blog/socket-react/
-import Chat from './components/Chat';
-import React, { useState, useEffect } from "react";
-import socketIOClient from "socket.io-client";
-const ENDPOINT = "http://127.0.0.1:4001";
+import './chat.scss';
 
+import React, { useState, useEffect } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import socketIOClient from "socket.io-client";
+
+import Navbar from './components/Navbar';
+import Home from './components/Home';
+import Login from './components/Login';
+import CreateAccount from './components/CreateAccount';
+import Chat from './components/Chat';
+
+// const ENDPOINT = "http://127.0.0.1:4001";
 
 function App() {
-  const [response, setResponse] = useState("");
 
-  useEffect(() => {
-    // const socket = socketIOClient(ENDPOINT);
-    // socket.on("FromAPI", data => {
-    //   setResponse(data);
-    // });
-  }, []);
+	const [users, setUsers] = useState([]);
+	const [activeUser, setActiveUser] = useState(null); 
+
+  const handleLogout = () => {
+		localStorage.clear();
+		setActiveUser(null);
+	}
 
   return (
-    <h2>
-      {/* <time dateTime={response}>{response}</time> */}
-      <Chat />
-    </h2>
+    <div>
+      <Navbar handleLogout={handleLogout}/>
+      <Switch>
+        <Route exact path='/' render={() => <Home />} />
+
+        <Route
+          exact
+          path='/login'
+          render={() => (
+            <Login
+              users={users}
+              activeUser={activeUser}
+              setActiveUser={setActiveUser}
+            />
+          )}
+        />
+
+        <Route
+          exact
+          path='/createaccount'
+          render={() => (
+            <CreateAccount />
+          )}
+        />
+      </Switch>
+    </div>
   );
 }
 
