@@ -8,7 +8,7 @@ export default function ChannelList(props) {
     }
 
     return (
-        <div className='channel-list'>
+        <div>
             {props.channels.length > 0 ?
                 props.channels.map(c => 
                     <Channel 

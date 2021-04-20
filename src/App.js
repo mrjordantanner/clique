@@ -1,5 +1,5 @@
-import './App.css';
-import './chat.scss';
+import './styles.scss';
+// import './style.css';
 
 import React, { useState, useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
@@ -10,7 +10,8 @@ import Home from './components/Home';
 import Login from './components/Login';
 import CreateAccount from './components/CreateAccount';
 import Chat from './components/Chat';
-
+import WidgetView from './components/WidgetView';
+import MainView from './components/MainView';
 // const ENDPOINT = "http://127.0.0.1:4001";
 
 function App() {
@@ -25,9 +26,12 @@ function App() {
 
   return (
     <div>
-      <Navbar handleLogout={handleLogout}/>
+      <Navbar handleLogout={handleLogout} activeUser={activeUser}/>
       <Switch>
-        <Route exact path='/' render={() => <Home />} />
+        <Route exact path='/' component={() => <Home />} />
+
+        <Route exact path='/chat' render={() => <MainView />} />
+
 
         <Route
           exact
@@ -35,9 +39,9 @@ function App() {
           render={() => (
             <Login
               users={users}
-              activeUser={activeUser}
               setActiveUser={setActiveUser}
             />
+            
           )}
         />
 

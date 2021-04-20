@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import APIurl from '../config';
+import LoginWithGoogle from './LoginWithGoogle';
 
-const Login = ( { activeUser, setActiveUser } ) => {
+const Login = ( { setActiveUser } ) => {
     
     const initialState = {
         name: '',
@@ -25,8 +26,7 @@ const Login = ( { activeUser, setActiveUser } ) => {
 			localStorage.setItem('token', data.token);
 			localStorage.setItem('expiration', Date.now() + 360000);   
 			setActiveUser(loginData.name);
-			console.log(activeUser);
-			history.push('/');
+			history.push('/chat');
 		})
 		.catch(() => setLoginError(true));
 	};
@@ -65,6 +65,7 @@ const Login = ( { activeUser, setActiveUser } ) => {
 					Sign In
 				</button>
 			</form>
+            {/* <LoginWithGoogle /> */}
 			{loginError && <p>Username or password not found</p>}
 			<p>No account yet?</p><Link to={'/createaccount'}>Create Account</Link>
 		</div>
