@@ -12,33 +12,47 @@ import MainView from './components/MainView';
 function App() {
 
   useEffect(() => {
+    // load active user data from localStorage if it exists, in case of browser reload
     loadLocalStorage();
-
   }, [])
 
   function loadLocalStorage() {
     // TODO: Improve this by using Passport to save logged in user instead
     const userName = localStorage.getItem('userName');
     const userToken = localStorage.getItem('token');
+    const currentChannel = localStorage.getItem('channel');
     const user = {
       name: userName,
-      token: userToken
+      token: userToken,
+      channel: currentChannel
     }
-    user && 
+    if (user) {
       setActiveUser(user);
+      setChannel(currentChannel);
+    }
+
   }
 
-  const blankUserState = {
+  const blankUser = {
     name: null, 
     token: null,
     channel: null
   }
+	const [activeUser, setActiveUser] = useState(blankUser); 
 
-	const [activeUser, setActiveUser] = useState(blankUserState); 
+  const blankChannel = {
+    name: '',
+    particpants: 0,
+    sockets: [],
+    messages: []
+  } 
+  const [channel, setChannel] = useState(blankChannel);
 
-  const handleLogout = () => {
+
+
+  function handleLogout() {
 		localStorage.clear();
-		setActiveUser(blankUserState);
+		setActiveUser(blankUser);
 	}
 
   return (
@@ -48,7 +62,7 @@ function App() {
 
         <Route exact path='/'>
           {activeUser.name ? 
-              <MainView /> : 
+              <MainView channel={channel} setChannel={setChannel}/> : 
               <Login setActiveUser={setActiveUser}/>}
         </Route>
 
