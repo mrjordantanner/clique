@@ -5,7 +5,7 @@ import anime from 'animejs';
 import useSound from 'use-sound';
 import boom from '../audio/808_Soft.wav';
 
-export default function Widget( { handleMouseDown, getWidgetData, pushColor } ) {
+export default function Widget( { getWidgetData, pushColor } ) {
     
     const widget = useRef();
     const uid = null;
@@ -22,7 +22,7 @@ export default function Widget( { handleMouseDown, getWidgetData, pushColor } ) 
 
     function handleMouseDown(e) {
       e.preventDefault();
-      play();
+      // play();
 
 
       // grow.restart();
@@ -60,11 +60,8 @@ export default function Widget( { handleMouseDown, getWidgetData, pushColor } ) 
         bounds='parent'
         onMouseDown={handleMouseDown}
         onDrag={getWidgetData}>
-          <div className='widget' id='draggable' ref={widget}></div>
+          <div className='hexagon' id='draggable' ref={widget}></div>
       </Draggable>
-
-
-
 
 
 

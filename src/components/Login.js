@@ -24,9 +24,13 @@ const Login = ( { setActiveUser } ) => {
 		.post(`${APIurl}/users/login`, loginData)
 		.then(({ data }) => {
 			localStorage.setItem('token', data.token);
-			localStorage.setItem('expiration', Date.now() + 360000);   
-			setActiveUser(loginData.name);
-			history.push('/chat');
+			// localStorage.setItem('expiration', Date.now() + 360000);   
+			setActiveUser({
+				name: loginData.name,
+				token: data.token,
+				channel: null
+			});
+			history.push('/');
 		})
 		.catch(() => setLoginError(true));
 	};
@@ -67,7 +71,7 @@ const Login = ( { setActiveUser } ) => {
 			</form>
             {/* <LoginWithGoogle /> */}
 			{loginError && <p>Username or password not found</p>}
-			<p>No account yet?</p><Link to={'/createaccount'}>Create Account</Link>
+			<p>No account yet?</p><Link to={'/signup'}>Create Account</Link>
 		</div>
 	);
 };

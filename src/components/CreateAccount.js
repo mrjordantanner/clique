@@ -19,15 +19,15 @@ const CreateAccount = () => {
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		axios
-			.post(`${APIurl}/users/signup`, newUser)
+			.post(`${APIurl}/users/create`, newUser)
 			.then(() => {
-				history.push(`/signin`);
+				history.push(`/login`);
 			})
 			.catch(() => setSignUpError(true));
 	};
 
 	return (
-		<div>
+		<div className='center'>
 			<form onSubmit={handleSubmit} className='add-user-form'>
 				<input
 					onChange={handleChange}
@@ -46,7 +46,7 @@ const CreateAccount = () => {
 					Sign Up
 				</button>
 			</form>
-			{signUpError && <p>Username already exists</p>}
+			{signUpError && <p>User already exists</p>}
 		</div>
 	);
 };

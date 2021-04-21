@@ -1,8 +1,7 @@
 import './styles.scss';
-// import './style.css';
 
 import React, { useState, useEffect } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import socketIOClient from "socket.io-client";
 
 import Navbar from './components/Navbar';
@@ -16,38 +15,43 @@ import MainView from './components/MainView';
 
 function App() {
 
-	const [users, setUsers] = useState([]);
-	const [activeUser, setActiveUser] = useState(null); 
+	// const [users, setUsers] = useState([]);
+
+  const blankUserState = {
+    name: null, 
+    token: null,
+    channel: null
+  }
+
+	const [activeUser, setActiveUser] = useState(blankUserState); 
 
   const handleLogout = () => {
 		localStorage.clear();
-		setActiveUser(null);
+		setActiveUser(blankUserState);
 	}
 
   return (
     <div>
-      <Navbar handleLogout={handleLogout} activeUser={activeUser}/>
+      <Navbar handleLogout={handleLogout} activeUser={activeUser} />
       <Switch>
-        <Route exact path='/' component={() => <Home />} />
 
-        <Route exact path='/chat' render={() => <MainView />} />
+        <Route exact path='/'>
+          {activeUser.token ? 
+              <MainView /> : 
+              <Login setActiveUser={setActiveUser}/>}
+        </Route>
 
-
-        <Route
+        {/* <Route
           exact
           path='/login'
           render={() => (
-            <Login
-              users={users}
-              setActiveUser={setActiveUser}
-            />
-            
+            <Login setActiveUser={setActiveUser} />
           )}
-        />
+        /> */}
 
         <Route
           exact
-          path='/createaccount'
+          path='/signup'
           render={() => (
             <CreateAccount />
           )}

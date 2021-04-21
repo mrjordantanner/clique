@@ -12,10 +12,11 @@ export default function ChannelList(props) {
             {props.channels.length > 0 ?
                 props.channels.map(c => 
                     <Channel 
-                        key={c.id} 
-                        id={c.id} 
+                        key={c._id} 
+                        id={c._id} 
                         name={c.name} 
                         participants={c.participants} 
+                        messages={c.messages}
                         onClick={handleClick}
                     />) :
                 <div className="no-content-message">No channels</div>

@@ -1,10 +1,10 @@
 import React from 'react';
 
-export default function Message({ senderName, text }) {
+export default function Message({ sender, text }) {
 
     return (
         <div className='message-item'>
-            <div><b>{senderName}</b></div>
+            <div><b>{sender}</b></div>
             <span>{text}</span>
         </div>
     )
