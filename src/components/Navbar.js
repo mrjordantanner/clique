@@ -11,13 +11,15 @@ export default function Navbar( { handleLogout, activeUser } ) {
                 {/* <div className='navbar-stripe'></div> */}
                 <ul>
                     {activeUser.token &&
-                        <li><Link className='nav-link' to='/'>C L I Q U E</Link></li>}
-                    
-                    {activeUser.token ?
-                        <li><Link className='nav-link' to='/login' onClick={handleLogout}>Log out</Link></li> :
-                        <li><Link className='nav-link' to='/login'>login</Link></li>}
+                        <>
+                            <li><Link className='nav-link' to='/'>C L I Q U E</Link></li>
+                            <li>Logged in as ( <Link className='nav-link' to='/profile' >{activeUser.name}</Link>  )</li>
+                            <li><Link className='nav-link' to='/' onClick={handleLogout}>Log out</Link></li>
+                        </>
+                    }
 
-                    <li>{activeUser?.name}</li>
+
+
                 </ul>
             </div>
         </div>

@@ -24,12 +24,13 @@ const Login = ( { setActiveUser } ) => {
 		.post(`${APIurl}/users/login`, loginData)
 		.then(({ data }) => {
 			localStorage.setItem('token', data.token);
-			// localStorage.setItem('expiration', Date.now() + 360000);   
-			setActiveUser({
+			// localStorage.setItem('expiration', Date.now() + 360000);
+			const user = {
 				name: loginData.name,
-				token: data.token,
-				channel: null
-			});
+				token: data.token
+			}   
+			setActiveUser(user);
+			localStorage.setItem('userName', loginData.name);
 			history.push('/');
 		})
 		.catch(() => setLoginError(true));
@@ -50,7 +51,8 @@ const Login = ( { setActiveUser } ) => {
 
 	return (
 		<div className='center'>
-			<h1>Sign In</h1>
+			<h1>C L I Q U E</h1>
+			<h2>Log In</h2>
 			<form onSubmit={handleSubmit} className='login-form'>
 				<input
 					onChange={handleChange}

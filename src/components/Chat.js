@@ -36,7 +36,7 @@ export default function Chat() {
         fetch(`${APIurl}/channels`)
         .then((res) => res.json())
         .then((res) => setChannels(res))
-        .then( configureSocket())
+        .then(configureSocket())
         .catch(console.error);
     }
 
@@ -64,6 +64,7 @@ export default function Chat() {
         socket.on('connection', () => {
             console.log('Socket: CONNECTION');
              // join General chat
+             // TODO: FIX THIS
             if (channels.length > 0) {
                 channel &&
                     handleChannelSelect(channels[0]._id);  
@@ -103,7 +104,7 @@ export default function Chat() {
 				return c._id === id;
 			});
 			setChannel(channel);
-            // TODO: update UI label in Navbar specifying current chat channel
+            
 			socket.emit('channel-join', id, (ack) => {});
 			console.log(`${channel.name} channel selected.`);
 		};

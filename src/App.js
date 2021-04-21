@@ -5,17 +5,28 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import socketIOClient from "socket.io-client";
 
 import Navbar from './components/Navbar';
-import Home from './components/Home';
 import Login from './components/Login';
 import CreateAccount from './components/CreateAccount';
-import Chat from './components/Chat';
-import WidgetView from './components/WidgetView';
 import MainView from './components/MainView';
-// const ENDPOINT = "http://127.0.0.1:4001";
 
 function App() {
 
-	// const [users, setUsers] = useState([]);
+  useEffect(() => {
+    loadLocalStorage();
+
+  }, [])
+
+  function loadLocalStorage() {
+    // TODO: Improve this by using Passport to save logged in user instead
+    const userName = localStorage.getItem('userName');
+    const userToken = localStorage.getItem('token');
+    const user = {
+      name: userName,
+      token: userToken
+    }
+    user && 
+      setActiveUser(user);
+  }
 
   const blankUserState = {
     name: null, 
@@ -36,26 +47,13 @@ function App() {
       <Switch>
 
         <Route exact path='/'>
-          {activeUser.token ? 
+          {activeUser.name ? 
               <MainView /> : 
               <Login setActiveUser={setActiveUser}/>}
         </Route>
 
-        {/* <Route
-          exact
-          path='/login'
-          render={() => (
-            <Login setActiveUser={setActiveUser} />
-          )}
-        /> */}
+        <Route exact path='/signup'><CreateAccount /></Route>
 
-        <Route
-          exact
-          path='/signup'
-          render={() => (
-            <CreateAccount />
-          )}
-        />
       </Switch>
     </div>
   );

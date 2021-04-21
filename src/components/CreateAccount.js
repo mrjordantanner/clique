@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
 import APIurl from '../config';
 
@@ -28,6 +28,8 @@ const CreateAccount = () => {
 
 	return (
 		<div className='center'>
+			<h1>CLIQUE</h1>
+			<h2>Create an account</h2>
 			<form onSubmit={handleSubmit} className='add-user-form'>
 				<input
 					onChange={handleChange}
@@ -46,6 +48,7 @@ const CreateAccount = () => {
 					Sign Up
 				</button>
 			</form>
+			<p>Already have an account?</p><Link to={'/'}>Log In Instead</Link>
 			{signUpError && <p>User already exists</p>}
 		</div>
 	);
