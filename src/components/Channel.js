@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-export default function Channel(props) {
+export default function Channel(props ) {
 
     const click = () => {
         props.onClick(props.id);

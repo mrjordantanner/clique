@@ -15,7 +15,7 @@ export default function ChannelList(props) {
                         key={c._id} 
                         id={c._id} 
                         name={c.name} 
-                        participants={c.participants} 
+                        // participants={c.participants} 
                         messages={c.messages}
                         onClick={handleClick}
                     />) :

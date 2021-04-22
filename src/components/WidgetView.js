@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Widget from './widgets/Widget';
 import '../styles/widgets.scss'
+import ChannelList from './ChannelList';
 
-export default function WidgetView() {
+export default function WidgetView(props) {
 
     let Draggable = require('react-draggable');
 
@@ -106,6 +107,10 @@ export default function WidgetView() {
 			 */}
 			 <Widget />
 
+			 <ChannelList 
+                channels={props.channels}
+                onSelectChannel={props.handleChannelSelect}
+                />
 				{/* {widgets?.map((widget) => {
 					return (
 						<Widget key={widget.uid} />

@@ -8,7 +8,6 @@ export default function MessageInput( { channel, handleSendMessage } ) {
         e.preventDefault();
         handleSendMessage(channel._id, formValue);
         setFormValue('');
-        // dummy.current.scrollIntoView(); //{ behavior: 'smooth' }
       }
 
     return (
