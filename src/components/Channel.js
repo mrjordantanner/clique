@@ -9,7 +9,7 @@ export default function Channel(props) {
     return (
         <div className='channel-item' onClick={click}>
             <div>{props.name}</div>
-            <span>{props.participants}</span>
+            {/* <span>{props.participants}</span> */}
         </div>
     )
    

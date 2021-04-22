@@ -6,12 +6,6 @@ export default function MessageInput( { channel, handleSendMessage } ) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // await messagesRef.add({
-        //   text: formValue,
-        //   createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        //   uid,
-        //   photoURL
-        // })
         handleSendMessage(channel._id, formValue);
         setFormValue('');
         // dummy.current.scrollIntoView(); //{ behavior: 'smooth' }

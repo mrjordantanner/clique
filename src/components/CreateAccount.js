@@ -21,7 +21,7 @@ const CreateAccount = () => {
 		axios
 			.post(`${APIurl}/users/create`, newUser)
 			.then(() => {
-				history.push(`/login`);
+				history.push(`/`);
 			})
 			.catch(() => setSignUpError(true));
 	};

@@ -3,7 +3,8 @@ import React, { useRef, useState, useEffect } from 'react';
 import Draggable from 'react-draggable';
 import anime from 'animejs';
 import useSound from 'use-sound';
-import boom from '../audio/808_Soft.wav';
+import boom from '../../audio/808_Soft.wav';
+import { useDrag } from 'react-dnd';
 
 export default function Widget( { getWidgetData, pushColor } ) {
     
@@ -19,12 +20,11 @@ export default function Widget( { getWidgetData, pushColor } ) {
       autoplay: false,
     });
 
+    const name = 'widget';
 
     function handleMouseDown(e) {
       e.preventDefault();
       // play();
-
-
       // grow.restart();
       // getWidgetData();
       // pushColor();
@@ -53,6 +53,32 @@ export default function Widget( { getWidgetData, pushColor } ) {
   // socket.on('update_data', function (data) {
 
 
+  //   const ItemTypes = {
+  //     BOX: 'box',
+  //   }
+
+  //   const style = {
+  //     cursor: 'pointer',
+  //   };
+
+  //   const [{ isDragging }, drag] = useDrag(() => ({
+  //     type: ItemTypes.BOX,
+  //     item: { name },
+  //     end: (item, monitor) => {
+  //         const dropResult = monitor.getDropResult();
+  //         if (item && dropResult) {
+  //             alert(`You dropped ${item.name} into ${dropResult.name}!`);
+  //         }
+  //     },
+  //     collect: (monitor) => ({
+  //         isDragging: monitor.isDragging(),
+  //         handlerId: monitor.getHandlerId(),
+  //     }),
+  // }));
+
+  // const opacity = isDragging ? 0.4 : 1;
+
+
 
 
     return(
@@ -60,10 +86,10 @@ export default function Widget( { getWidgetData, pushColor } ) {
         bounds='parent'
         onMouseDown={handleMouseDown}
         onDrag={getWidgetData}>
-          <div className='hexagon' id='draggable' ref={widget}></div>
+          <div className='widget hexagon' id='draggable' ref={widget}></div>
       </Draggable>
 
-
+      // <div className='hexagon' ref={drag} role="Box" style={{ ...style, opacity }} data-testid={`box-${name}`}></div>
 
 
 

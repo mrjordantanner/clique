@@ -8,7 +8,7 @@ export default function ChannelList(props) {
     }
 
     return (
-        <div>
+        <div className='channelList'>
             {props.channels.length > 0 ?
                 props.channels.map(c => 
                     <Channel 
@@ -19,7 +19,7 @@ export default function ChannelList(props) {
                         messages={c.messages}
                         onClick={handleClick}
                     />) :
-                <div className="no-content-message">No channels</div>
+                <div>No channels</div>
             }
         </div>);
 }

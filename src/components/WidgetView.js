@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import Widget from '../widgets/Widget';
+import Widget from './widgets/Widget';
+import '../styles/widgets.scss'
 
 export default function WidgetView() {
 
@@ -99,7 +100,7 @@ export default function WidgetView() {
 
 
     return (
-		<div className='main-grid'>
+		<div className='wireframe'>
 			<div className='widget-container' ref={container}>
 				{/* <Widget pushColor={pushColor}/> 
 			 */}

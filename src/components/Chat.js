@@ -9,15 +9,13 @@ import axios from 'axios';
 //#region [Violet]
 export default function Chat({ channel, setChannel }) {
 
-    const SERVER = "http://127.0.0.1:8080";
-
     const [channels, setChannels] = useState([]);
     const [socket, setSocket] = useState(null);
-    // const [channel, setChannel] = useState(channelState);
+    const [messages, setMessages] = useState([]);
 
     useEffect(() => {
         loadChannels();
-        // configureSocket();
+        
     }, [])
 
     function loadChannels() {
@@ -28,32 +26,12 @@ export default function Chat({ channel, setChannel }) {
         .catch(console.error);
     }
 
-    // const loadChannels = async () => {
-    //     // fetch('http://localhost:8080/getChannels')
-    //     // .then(async response => {
-    //     //     let data = await response.json();
-    //     //     setChannels(data.channels);
-    //     // })
-    //     // .then(console.log(channels));
-
-    //     fetch(`${APIurl}/channels`)
-    //     .then((res) => res.json())
-    //     .then((res) => setChannels(res))
-    //     .catch(console.error);
-
-
-    // }
-
     const configureSocket = () => {
 
-        // var socket = socketClient(SERVER);
         var socket = socketClient(APIurl);
 
-        // New client connected
         socket.on('connection', () => {
             console.log('Socket: CONNECTION');
-             // join General chat
-             // TODO: FIX THIS
             if (channels.length > 0) {
                 channel &&
                     handleChannelSelect(channels[0]._id);  
@@ -61,20 +39,23 @@ export default function Chat({ channel, setChannel }) {
         });
 
         socket.on('channel', channel => {
-            console.log('Socket: CHANNEL');
-            channels.forEach(c => {
-                if (c._id === channel._id) {
-                    c.participants = channel.participants;
-                }
-            });
-            // setChannels(channels);
+            // console.log('Socket: CHANNEL');
+            // channels.forEach(c => {
+            //     if (c._id === channel._id) {
+            //         c.participants = channel.participants;
+            //     }
+            // });
             setChannel(channel)
             console.log(`Set channel: ${channel.name}`);
-            console.log(channels);
+            // console.log(channels);
         });
 
+        // 3) Listen for message coming from back end
         socket.on('message', message => {
 
+            // Iterate through channels and find which one the incoming 
+            // message belongs in.  Then push it into that channel's messages
+            // array.
             channels.forEach(c => {
                 if (c._id === message.channel_id) {
                     if (!c.messages) {
@@ -83,11 +64,13 @@ export default function Chat({ channel, setChannel }) {
                         c.messages.push(message);
                     }
                 }
+                setMessages(c.messages);
             });
+
             console.log(`Message: ${message.text}`);
-            console.log();
             // setChannels(channels);
         });
+
         setSocket(socket);
     }
 
@@ -98,51 +81,47 @@ export default function Chat({ channel, setChannel }) {
 
 			setChannel(channel);
             localStorage.setItem('channel', channel._id);
-            
 			socket.emit('channel-join', id, (ack) => {});
+
 			console.log(`${channel.name} channel selected.`);
 		};
 
-    const handleSendMessage = (channelId, text) => {
+    const handleSendMessage = (channelId, formValue) => {
 
-        // Create message in DB
-        // Push into channel.messages[]
+        // Construct outgoing messageData object
+        const messageData = {
+            text: formValue,
+            channelId: channelId,
+            socketId: socket.id,
+            sender: localStorage.getItem('userName'),
+            id: Date.now()
+        }
 
+        // Post message to database
         axios({
 			url: `${APIurl}/messages`,
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			},
-			data: {
-                channelId,
-                text
-            },
+			data: messageData,
 		})
-        .then(({ data }) => {
-
-        })
         .catch(console.error);
 
-        // Emit message to other clients    
-        socket.emit('send-message', { 
-            channelId, 
-            text, 
-            sender: socket.id,   // TODO: Change this to userName
-            id: Date.now() 
-        });
+        // 1) Emit message to other clients    
+        socket.emit('send-message', {messageData});
     }
 
 //#endregion
 
     return (
-        <div className='channel-list'>
+        <div>
             <h2>{channel?.name}</h2>
             <ChannelList 
                 channels={channels}
                 onSelectChannel={handleChannelSelect}
                 />
-            <MessagesPanel 
+            <MessagesPanel  
                 handleSendMessage={handleSendMessage} 
                 channel={channel} 
                 />

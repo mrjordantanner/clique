@@ -1,4 +1,4 @@
-import './styles.scss';
+import './styles/styles.scss';
 
 import React, { useState, useEffect } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import Login from './components/Login';
 import CreateAccount from './components/CreateAccount';
 import MainView from './components/MainView';
+
 
 function App() {
 
@@ -46,9 +47,8 @@ function App() {
     sockets: [],
     messages: []
   } 
+
   const [channel, setChannel] = useState(blankChannel);
-
-
 
   function handleLogout() {
 		localStorage.clear();
@@ -57,12 +57,12 @@ function App() {
 
   return (
     <div>
-      <Navbar handleLogout={handleLogout} activeUser={activeUser} />
+      {/* <Navbar handleLogout={handleLogout} activeUser={activeUser} /> */}
       <Switch>
 
         <Route exact path='/'>
           {activeUser.name ? 
-              <MainView channel={channel} setChannel={setChannel}/> : 
+              <MainView channel={channel} setChannel={setChannel} handleLogout={handleLogout} activeUser={activeUser}/> : 
               <Login setActiveUser={setActiveUser}/>}
         </Route>
 
