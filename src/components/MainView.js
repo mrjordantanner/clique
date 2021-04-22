@@ -2,6 +2,7 @@ import React from 'react'
 import WidgetView from './WidgetView';
 import SideBar from './SideBar';
 import Navbar from './Navbar';
+import MessagesPanel from './MessagesPanel';
 import Container from './DnD/Container';
 
 export default function MainView({
