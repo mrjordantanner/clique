@@ -2,6 +2,10 @@
 	box-sizing: border-box;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 // Colors
 $clique-green: #35FF86;
 $not-black: #121212;
@@ -79,13 +83,9 @@ body {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+  justify-content: center;
 	margin-top: 10vh;
 	width: 100%;
-}
-
-
-::-webkit-scrollbar {
-  display: none;
 }
 
 a {
@@ -104,53 +104,7 @@ a {
     opacity: 0.8;
     color: orange;
   }
-
 }
-
-
-
-
-form {
-  // height: 5vh;
-  width: 100%;
-  display: flex;
-  // margin: 0rem 2rem;
-  // font-size: 1.5rem;
-}
-
-form button {
-  width: 25%;
-  border: 2px white solid;
-
-}
-
-input {
-  display: block;
-  font-size: 1rem;
-  background: transparent;
-  color: white;
-  outline: none;
-  border: 2px white solid;
-  padding: 0 2rem;
-}
-
-button {
-  background: transparent;
-  border: none;
-  color: white;
-  padding: 0.5rem 1rem;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  cursor: pointer;
-  font-size: 1rem;
-  
-}
-
-button:disabled {
-  opacity: 0.5;
-}
-
 
 .button {
   color: black;
@@ -188,18 +142,11 @@ p {
   .sender {
     font-weight:bold;
   }
-
-  // .text {
-
-  // }
-
 }
-
 
 .wireframe {
   border: 1px solid #35FF86;
 }
-
 
 .grid {
   height: 100vh;
@@ -272,8 +219,6 @@ header, footer {
     border: 1px solid lightgray;
   }
 
-
-
   &:hover {
       opacity: 1;
       cursor: pointer;
@@ -281,4 +226,48 @@ header, footer {
       color: $not-black;
       border: 1px solid chartreuse;
   }
+}
+
+
+
+
+.account {
+  display: flex;
+  flex-direction: column;
+
+  input {
+    font-size: 1.5rem;
+    height: 40px;
+    width: 20vw;
+    background: transparent;
+    color: white;
+    outline: none;
+    border: 2px white solid;
+    padding: 0 2rem;
+  }
+  
+  button {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    font-size: 1.5rem;
+    border: 2px white solid;
+    
+  }
+  
+  button:disabled {
+    opacity: 0.5;
+  }
+}
+
+
+.logo-text {
+  font-size: 3rem;
+  font-weight: bold;
+  color: $clique-green;
 }

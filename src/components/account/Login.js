@@ -51,9 +51,9 @@ const Login = ( { setActiveUser } ) => {
 
 	return (
 		<div className='center'>
-			<h1>C L I Q U E</h1>
+			<h1 className='logo-text'>C L I Q U E</h1>
 			<h2>Log In</h2>
-			<form onSubmit={handleSubmit} className='login-form'>
+			<form onSubmit={handleSubmit} className='account'>
 				<input
 					onChange={handleChange}
 					name='name'
@@ -67,7 +67,7 @@ const Login = ( { setActiveUser } ) => {
 					value={loginData.password}
 					placeholder='password'
 				/>
-				<button className='' id='button' type='submit'>
+				<button className='button' id='button' type='submit'>
 					Sign In
 				</button>
 			</form>

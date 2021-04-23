@@ -28,9 +28,9 @@ const CreateAccount = () => {
 
 	return (
 		<div className='center'>
-			<h1>CLIQUE</h1>
+			<div className='logo-text'>C L I Q U E</div>
 			<h2>Create an account</h2>
-			<form onSubmit={handleSubmit} className='add-user-form'>
+			<form onSubmit={handleSubmit} className='account'>
 				<input
 					onChange={handleChange}
 					name='name'
