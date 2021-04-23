@@ -5,161 +5,185 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import socketClient from "socket.io-client";
 
 import Navbar from './components/Navbar';
-import Login from './components/Login';
-import CreateAccount from './components/CreateAccount';
+import Login from './components/account/Login';
+import CreateAccount from './components/account/CreateAccount';
 import MainView from './components/MainView';
 import APIurl from './config';
 import axios from 'axios';
 
-
 function App() {
 
-  const blankUser = {
-    name: null, 
-    token: null,
-    channel: null
-  }
+	const blankUser = {
+		name: null,
+		token: null,
+		channel: null,
+	};	
+	
+	// User we are currently logged in as
+	const [activeUser, setActiveUser] = useState(blankUser);
 
-	const [activeUser, setActiveUser] = useState(blankUser); 
+	// All users currently logged in
+	const [users, setUsers] = useState();
 
-  const [channel, setChannel] = useState(null)
-  const [channels, setChannels] = useState([]);
-  const [socket, setSocket] = useState(null);
+	// Channel user is currently in
+	const [channel, setChannel] = useState(null);
 
-  const [messages, setMessages] = useState([]);
+	// All chat channels (other than General)
+	const [channels, setChannels] = useState([]);
+	// General chat channel (all users always connected to this)
+	// const [generalChannel, setGeneralChannel] = useState();
+	let generalChannel;
 
+	// Socket this user is using
+	const [socket, setSocket] = useState(null);
 
-  useEffect(() => {
-    loadUserData();
-    loadChannels();
-    // enterCurrentChannel();
+	// All messages in the current channel
+	const [messages, setMessages] = useState([]);
 
-  }, [])
+	useEffect(() => {
+		loadUserData();
+   		 // getUsers();
+		getChannels();
+    	getGeneralChannel();
+  		// joinGeneralChannel();
+		// joinLastChannel();
+	}, []);
 
-      // load active user data from localStorage if it exists, in case of browser reload
-    // TODO: Improve this by using Passport to save logged in user instead
-  function loadUserData() {
-    const userName = localStorage.getItem('userName');
-    const userToken = localStorage.getItem('token');
-    const user = {
-      name: userName,
-      token: userToken,
-      channel: channel
-    }
-    if (user) {
-      setActiveUser(user);
-    }
-  }
+	// load active user data from localStorage if it exists, in case of browser reload
+	// TODO: Improve this by using Passport to save logged in user instead
+	function loadUserData() {
+		const userName = localStorage.getItem('userName');
+		const userToken = localStorage.getItem('token');
+		const user = {
+			name: userName,
+			token: userToken,
+			channel: channel,
+		};
+		if (user) {
+			setActiveUser(user);
+		}
+	}
 
-  function handleLogout() {
+	function handleLogout() {
 		localStorage.clear();
 		setActiveUser(blankUser);
 	}
 
-  function enterCurrentChannel() {
-      const currentChannelId = localStorage.getItem('channel');
-      if (currentChannelId) {
-          handleChannelSelect(currentChannelId);
-      }
+ 	// If a channel exists in localStorage, join that channel
+	function joinLastChannel() {
+		const currentChannelId = localStorage.getItem('channel');
+		if (currentChannelId)
+			handleChannelSelect(currentChannelId);
+		
+	}
+
+  	function getGeneralChannel() {
+		fetch(`${APIurl}/channels/name/General`)
+			.then((res) => res.json())
+			// .then((res) => console.log(`General channel: ${res}`))
+			.then((res) => generalChannel = res)
+			// .then(console.log(`General channel: ${generalChannel}`))
+			.catch(console.error);
+	}
+
+	function getChannels() {
+		fetch(`${APIurl}/channels`)
+			.then((res) => res.json())
+			.then((res) => setChannels(res))
+			.then(console.log(`Channels channel: ${{channels}}`))
+			.then(configureSocket())
+			.catch(console.error);
+	}
+
+  // TODO: Check which users are authenticated and only return those
+  function getUsers() {
+    fetch(`${APIurl}/users`)
+    .then((res) => res.json())
+    .then((res) => setUsers(res))
+    .catch(console.error);
   }
 
-  function loadChannels() {
-      fetch(`${APIurl}/channels`)
-      .then((res) => res.json())
-      .then((res) => setChannels(res))
-      .then(configureSocket())
-      .catch(console.error);
-  }
+	const configureSocket = () => {
+		const socket = socketClient(APIurl);
 
-  const configureSocket = () => {
+		socket.on('connection', () => {
+			console.log('Socket connected.');
+		});
 
-      var socket = socketClient(APIurl);
+   		socket.on('connection-general', () => {
+			console.log('Socket connected to general channel.');
+		});
 
-      socket.on('connection', () => {
-          console.log('Socket: CONNECTION');
-          if (channels.length > 0) {
-              channel &&
-                  handleChannelSelect(channels[0]._id);  
-          }
-      });
+		socket.on('channel', (channel) => {
+			// console.log('Socket: CHANNEL');
+			// channels.forEach(c => {
+			//     if (c._id === channel._id) {
+			//         c.participants = channel.participants;
+			//     }
+			// });
+			setChannel(channel);
+			console.log(`Set channel: ${channel.name}`);
+		});
 
-      socket.on('channel', channel => {
-          // console.log('Socket: CHANNEL');
-          // channels.forEach(c => {
-          //     if (c._id === channel._id) {
-          //         c.participants = channel.participants;
-          //     }
-          // });
-          setChannel(channel)
-          console.log(`Set channel: ${channel.name}`);
-      });
+		// 3) Listen for message coming from back end
+		socket.on('message', (message) => {
+			// Iterate through channels and find which one the incoming
+			// message belongs in.  Then push it into that channel's messages
+			// array.
+			channels.forEach((c) => {
+				if (c._id === message.channel_id) {
+					if (!c.messages) {
+						c.messages = [message];
+					} else {
+						c.messages.push(message);
+					}
+				}
+				setMessages(c.messages);
+			});
 
-      // 3) Listen for message coming from back end
-      socket.on('message', message => {
+			console.log(`${message.messageData.sender}: ${message.messageData.text}`);
+		});
 
-          // Iterate through channels and find which one the incoming 
-          // message belongs in.  Then push it into that channel's messages
-          // array.
-          channels.forEach(c => {
-              if (c._id === message.channel_id) {
-                  if (!c.messages) {
-                      c.messages = [message];
-                  } else {
-                      c.messages.push(message);
-                  }
-              }
-              setMessages(c.messages);
-          });
+		setSocket(socket);
+	};
 
-          console.log(`${message.messageData.sender}: ${message.messageData.text}`);
-      });
+	const handleChannelSelect = (id) => {
+		let channel = channels.find((c) => {
+			return c._id === id;
+		});
 
-      setSocket(socket);
-  }
+		setChannel(channel);
+		localStorage.setItem('channel', channel._id);
+		socket.emit('channel-join', id);//, () => {});
+		// console.log(`${channel.name} channel selected.`);
+	};
 
-  const handleChannelSelect = (id) => {
-    let channel = channels.find((c) => {
-      return c._id === id;
-    });
+	const handleSendMessage = (channelId, formValue) => {
+		// Construct outgoing messageData object
+		const messageData = {
+			text: formValue,
+			channelId: channelId,
+			socketId: socket.id,
+			sender: localStorage.getItem('userName'),
+			id: Date.now(),
+		};
 
-    setChannel(channel);
-          localStorage.setItem('channel', channel._id);
-    socket.emit('channel-join', id, (ack) => {});
+		// Post message to database
+		axios({
+			url: `${APIurl}/messages`,
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			},
+			data: messageData,
+		}).catch(console.error);
 
-    console.log(`${channel.name} channel selected.`);
-  };
+		// 1) Emit message to the backend
+		socket.emit('send-message', { messageData });
+	};
 
-  const handleSendMessage = (channelId, formValue) => {
-
-      // Construct outgoing messageData object
-      const messageData = {
-          text: formValue,
-          channelId: channelId,
-          socketId: socket.id,
-          sender: localStorage.getItem('userName'),
-          id: Date.now()
-      }
-
-      // Post message to database
-      axios({
-    url: `${APIurl}/messages`,
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
-    },
-    data: messageData,
-  })
-      .catch(console.error);
-
-      // 1) Emit message to the backend  
-      socket.emit('send-message', { messageData });
-  }
-
-//#endregion
-
-  return (
+	return (
 		<div>
-			{/* <Navbar handleLogout={handleLogout} activeUser={activeUser} /> */}
 			<Switch>
 				<Route exact path='/'>
 					{activeUser.name ? (
@@ -169,6 +193,7 @@ function App() {
 							handleLogout={handleLogout}
 							activeUser={activeUser}
 							channels={channels}
+              generalChannel={generalChannel}
 							handleChannelSelect={handleChannelSelect}
 							handleSendMessage={handleSendMessage}
 						/>
