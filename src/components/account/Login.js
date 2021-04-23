@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-import APIurl from '../config';
+import APIurl from '../../config';
 import LoginWithGoogle from './LoginWithGoogle';
 
 const Login = ( { setActiveUser } ) => {

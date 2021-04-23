@@ -1,137 +1,71 @@
-//https://github.com/davidzas/react-chat/blob/master/src/chat/Chat.js
-import React, { useEffect, useState } from 'react';
-import ChannelList from '../components/ChannelList';
-import MessagesPanel from '../components/MessagesPanel';
-import socketClient from "socket.io-client";
-import APIurl from '../config';
-import axios from 'axios';
+import React, { useEffect, useRef, useState } from 'react';
+import Message from './Message';
+import MessageInput from './MessageInput';
+import ChannelTab from './ChannelTab';
+import GeneralTab from './GeneralTab';
 
-//#region [Violet]
-export default function Chat({ channel, setChannel, handleSendMessage }) {
+export default function Chat({ channel, generalChannel, handleSendMessage }) {
 
-//     const [channels, setChannels] = useState([]);
-//     const [socket, setSocket] = useState(null);
-//     const [messages, setMessages] = useState([]);
+    // Renders chat-related components 
 
-//     useEffect(() => {
-//         loadChannels();
-//         enterCurrentChannel();
-//     }, [])
+    const dummy = useRef();
 
-//     function enterCurrentChannel() {
-//         const currentChannelId = localStorage.getItem('channel');
-//         if (currentChannelId) {
-//             handleChannelSelect(currentChannelId);
-//         }
-//     }
+    const [channelToRender, setChannelToRender] = useState(generalChannel);
 
-//     function loadChannels() {
-//         fetch(`${APIurl}/channels`)
-//         .then((res) => res.json())
-//         .then((res) => setChannels(res))
-//         .then(configureSocket())
-//         .catch(console.error);
-//     }
+    // called from the Chat tabs, this tells the messages panel
+    // which channel's messages to render
+    // It does not join/leave any channels
 
-//     const configureSocket = () => {
+    // TODO: Make sure these variables are referencing the channel object
+    // that has data, not just the channel id
+    function displayGeneralMessages() {
+        setChannelToRender(generalChannel);
+    }
 
-//         var socket = socketClient(APIurl);
+    function displayChannelMessages() {
+        setChannelToRender(channel);
+    }
 
-//         socket.on('connection', () => {
-//             console.log('Socket: CONNECTION');
-//             if (channels.length > 0) {
-//                 channel &&
-//                     handleChannelSelect(channels[0]._id);  
-//             }
-//         });
 
-//         socket.on('channel', channel => {
-//             // console.log('Socket: CHANNEL');
-//             // channels.forEach(c => {
-//             //     if (c._id === channel._id) {
-//             //         c.participants = channel.participants;
-//             //     }
-//             // });
-//             setChannel(channel)
-//             console.log(`Set channel: ${channel.name}`);
-//             // console.log(channels);
-//         });
 
-//         // 3) Listen for message coming from back end
-//         socket.on('message', message => {
+    useEffect(() => {
+        scrollToBottom();
+        console.log('Chat useEffect');
+      }, [channelToRender]);
 
-//             // Iterate through channels and find which one the incoming 
-//             // message belongs in.  Then push it into that channel's messages
-//             // array.
-//             channels.forEach(c => {
-//                 if (c._id === message.channel_id) {
-//                     if (!c.messages) {
-//                         c.messages = [message];
-//                     } else {
-//                         c.messages.push(message);
-//                     }
-//                 }
-//                 setMessages(c.messages);
-//             });
-
-//             console.log(`${message.messageData.sender}: ${message.messageData.text}`);
-//         });
-
-//         setSocket(socket);
-//     }
-
-//     const handleChannelSelect = (id) => {
-// 			let channel = channels.find((c) => {
-// 				return c._id === id;
-// 			});
-
-// 			setChannel(channel);
-//             localStorage.setItem('channel', channel._id);
-// 			socket.emit('channel-join', id, (ack) => {});
-
-// 			console.log(`${channel.name} channel selected.`);
-// 		};
-
-//     const handleSendMessage = (channelId, formValue) => {
-
-//         // Construct outgoing messageData object
-//         const messageData = {
-//             text: formValue,
-//             channelId: channelId,
-//             socketId: socket.id,
-//             sender: localStorage.getItem('userName'),
-//             id: Date.now()
-//         }
-
-//         // Post message to database
-//         axios({
-// 			url: `${APIurl}/messages`,
-// 			method: 'POST',
-// 			headers: {
-// 				Authorization: `Bearer ${localStorage.getItem('token')}`,
-// 			},
-// 			data: messageData,
-// 		})
-//         .catch(console.error);
-
-//         // 1) Emit message to the backend  
-//         socket.emit('send-message', { messageData });
-//     }
-
-// //#endregion
+      const scrollToBottom = () => {
+        dummy.current?.scrollIntoView({ behavior: "smooth" })
+      }
 
     return (
         <div>
-            {/* <h2>{channel?.name}</h2> */}
-            {/* <ChannelList 
-                channels={channels}
-                onSelectChannel={handleChannelSelect}
-                /> */}
-            <MessagesPanel  
-                handleSendMessage={handleSendMessage} 
-                channel={channel} 
+            <div className='tab-container'>
+                <GeneralTab displayGeneralMessages={displayGeneralMessages}/>
+                <ChannelTab 
+                    channel={channel} 
+                    displayChannelMessages={displayChannelMessages}
                 />
+            </div>
+            <div className='messages-panel'>
+                <div>
+                    {channelToRender && channelToRender.messages ? 
+                        channelToRender.messages.map(m => 
+                        <Message 
+                            key={m._id} 
+                            id={m._id} 
+                            sender={m.sender} 
+                            text={m.text} 
+                        />) :
+                        <div>No messages.</div>
+                    }
+                     <div ref={dummy}></div>
+                </div>
+
+            </div>
+
+        <MessageInput channel={channel} handleSendMessage={handleSendMessage}/>
+       
         </div>
     );
-
+  
 }

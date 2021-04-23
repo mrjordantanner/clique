@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
-import Widget from './widgets/Widget';
-import '../styles/widgets.scss'
+import Widget from '../widgets/Widget';
+import '../../styles/widgets.scss';
 import ChannelList from './ChannelList';
 
-export default function WidgetView(props) {
+export default function ChannelView(props) {
 
     let Draggable = require('react-draggable');
 

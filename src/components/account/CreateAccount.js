@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
-import APIurl from '../config';
+import APIurl from '../../config';
 
 const CreateAccount = () => {
 	const initialState = {

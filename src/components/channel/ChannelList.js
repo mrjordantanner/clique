@@ -1,7 +1,9 @@
 import React from 'react';
-import Channel from '../components/Channel';
+import Channel from './Channel';
 
 export default function ChannelList(props) {
+
+    // Maps over array of channels and renders individual channel components
 
     const handleClick = id => {
         props.onSelectChannel(id);
