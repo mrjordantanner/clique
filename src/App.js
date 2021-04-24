@@ -1,17 +1,40 @@
+
 import './styles/styles.scss';
 
 import React, { useState, useEffect } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import socketClient from "socket.io-client";
 
+import MainView from './components/channel/MainView';
+import SideBar from './components/SideBar';
+import Chat from './components/Chat';
 import Navbar from './components/Navbar';
+import Channel from './components/channel/Channel';
 import Login from './components/account/Login';
 import CreateAccount from './components/account/CreateAccount';
-import MainView from './components/MainView';
+// import MainView from './components/MainView';
 import APIurl from './config';
 import axios from 'axios';
 
+import { useRecoilState } from 'recoil';
+import {
+	channelsState as channelsAtom,
+	channelState as channelAtom,
+	channelViewState as channelViewAtom,
+	generalState as generalAtom,
+} from './atoms';
+
+
+//region [Purple]
 function App() {
+
+	// RECOIL STATES
+	const [channels, setChannels] = useRecoilState(channelsAtom);
+	const [channel, setChannel] = useRecoilState(channelAtom);
+
+	const [general, setGeneral] = useRecoilState(generalAtom);
+
+
 
 	const blankUser = {
 		name: null,
@@ -26,10 +49,10 @@ function App() {
 	const [users, setUsers] = useState();
 
 	// Channel user is currently in
-	const [channel, setChannel] = useState(null);
+	// const [channel, setChannel] = useState(null);
 
 	// All chat channels (other than General)
-	const [channels, setChannels] = useState([]);
+	// const [channels, setChannels] = useState([]);
 	// General chat channel (all users always connected to this)
 	// const [generalChannel, setGeneralChannel] = useState();
 	let generalChannel;
@@ -39,6 +62,23 @@ function App() {
 
 	// All messages in the current channel
 	const [messages, setMessages] = useState([]);
+
+	// const [channelToRender, setChannelToRender] = useState(generalChannel);
+
+    // called from the Chat tabs, this tells the messages panel
+    // which channel's messages to render
+    // It does not join/leave any channels
+
+    // TODO: Make sure these variables are referencing the channel object
+    // that has data, not just the channel id
+
+    // function displayGeneralMessages() {
+    //     setChannelToRender(generalChannel);
+    // }
+
+    // function displayChannelMessages() {
+    //     setChannelToRender(channel);
+    // }
 
 	useEffect(() => {
 		loadUserData();
@@ -73,7 +113,7 @@ function App() {
 	function joinLastChannel() {
 		const currentChannelId = localStorage.getItem('channel');
 		if (currentChannelId)
-			handleChannelSelect(currentChannelId);
+			joinChannelById(currentChannelId);
 		
 	}
 
@@ -81,7 +121,7 @@ function App() {
 		fetch(`${APIurl}/channels/name/General`)
 			.then((res) => res.json())
 			// .then((res) => console.log(`General channel: ${res}`))
-			.then((res) => generalChannel = res)
+			.then((res) => setGeneral(res))
 			// .then(console.log(`General channel: ${generalChannel}`))
 			.catch(console.error);
 	}
@@ -90,7 +130,6 @@ function App() {
 		fetch(`${APIurl}/channels`)
 			.then((res) => res.json())
 			.then((res) => setChannels(res))
-			.then(console.log(`Channels channel: ${{channels}}`))
 			.then(configureSocket())
 			.catch(console.error);
 	}
@@ -125,7 +164,7 @@ function App() {
 			console.log(`Set channel: ${channel.name}`);
 		});
 
-		// 3) Listen for message coming from back end
+		// 3) Listen for new messages
 		socket.on('message', (message) => {
 			// Iterate through channels and find which one the incoming
 			// message belongs in.  Then push it into that channel's messages
@@ -147,7 +186,7 @@ function App() {
 		setSocket(socket);
 	};
 
-	const handleChannelSelect = (id) => {
+	function joinChannelById(id) {
 		let channel = channels.find((c) => {
 			return c._id === id;
 		});
@@ -158,45 +197,86 @@ function App() {
 		// console.log(`${channel.name} channel selected.`);
 	};
 
-	const handleSendMessage = (channelId, formValue) => {
-		// Construct outgoing messageData object
-		const messageData = {
-			text: formValue,
-			channelId: channelId,
-			socketId: socket.id,
-			sender: localStorage.getItem('userName'),
-			id: Date.now(),
-		};
+	// const handleSendMessage = (channelId, formValue) => {
+	// 	// Construct outgoing messageData object
+	// 	const messageData = {
+	// 		text: formValue,
+	// 		channelId: channelId,
+	// 		socketId: socket.id,
+	// 		sender: localStorage.getItem('userName'),
+	// 		id: Date.now(),
+	// 	};
 
-		// Post message to database
-		axios({
-			url: `${APIurl}/messages`,
-			method: 'POST',
-			headers: {
-				Authorization: `Bearer ${localStorage.getItem('token')}`,
-			},
-			data: messageData,
-		}).catch(console.error);
+	// 	// Post message to database
+	// 	axios({
+	// 		url: `${APIurl}/messages`,
+	// 		method: 'POST',
+	// 		headers: {
+	// 			Authorization: `Bearer ${localStorage.getItem('token')}`,
+	// 		},
+	// 		data: messageData,
+	// 	}).catch(console.error);
 
-		// 1) Emit message to the backend
-		socket.emit('send-message', { messageData });
-	};
+	// 	// 1) Emit message to the backend
+	// 	socket.emit('send-message', { messageData });
+	// };
+
+
+
 
 	return (
 		<div>
 			<Switch>
 				<Route exact path='/'>
 					{activeUser.name ? (
-						<MainView
-							channel={channel}
-							setChannel={setChannel}
-							handleLogout={handleLogout}
-							activeUser={activeUser}
-							channels={channels}
-              generalChannel={generalChannel}
-							handleChannelSelect={handleChannelSelect}
-							handleSendMessage={handleSendMessage}
-						/>
+						// <MainView
+						// 	channel={channel}
+						// 	setChannel={setChannel}
+						// 	handleLogout={handleLogout}
+						// 	activeUser={activeUser}
+						// 	channels={channels}
+						// 	generalChannel={generalChannel}
+						// 	handleChannelSelect={handleChannelSelect}
+						// 	handleSendMessage={handleSendMessage}
+						// />
+
+						<div className='grid'>
+							<header className='wireframe'>
+								<Navbar handleLogout={handleLogout} activeUser={activeUser} />
+							</header>
+
+							<aside className='sidebar-left wireframe'>
+								<SideBar />
+							</aside>
+
+							<article className='wireframe'>
+								<MainView />
+
+								{/* <div className='channelList'>
+									{channels.length > 0 ? (
+										channels.map((c) => (
+											<Channel
+												key={c._id}
+												id={c._id}
+												name={c.name}
+												// participants={c.participants}
+												messages={c.messages}
+												onClick={handleClick}
+											/>
+										))
+									) : (
+										<div>No channels</div>
+									)}
+								</div>
+								); */}
+
+
+							</article>
+
+							<aside className='sidebar-right wireframe'>
+								<Chat socket={socket}/>
+							</aside>
+						</div>
 					) : (
 						<Login setActiveUser={setActiveUser} />
 					)}
@@ -211,3 +291,4 @@ function App() {
 }
 
 export default App;
+//endregion
