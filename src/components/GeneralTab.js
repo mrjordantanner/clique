@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
 	channelViewState as channelViewAtom,
@@ -7,17 +7,21 @@ import {
 
 export default function GeneralTab() {
 
-    function handleClick(e) {
-        e.preventDefault();
-        setChannelView(general);
-        console.log(`ChannelView: ${general.name}`);
-    }
-
     const general = useRecoilValue(generalAtom);
 	const [channelView, setChannelView] = useRecoilState(channelViewAtom);
 
+    useEffect(() => {
+        setChannelView(general);
+    }, [])
+
+    function handleClick(e) {
+        e.preventDefault();
+        setChannelView(general);
+    }
+
+
     return (
-        <form className='channel-tab wireframe'>
+        <form className='channel-tab'>
             <button onClick={handleClick}>General</button>
         </form>
     )

@@ -7,15 +7,13 @@ import {
 
 export default function ChannelTab() {
 
+    const channel = useRecoilValue(channelAtom);
+	const [channelView, setChannelView] = useRecoilState(channelViewAtom);
+
 	function handleClick(e) {
 		e.preventDefault();
         setChannelView(channel);
-        console.log(`ChannelView: ${channel.name}`);
 	}
-
-    const channel = useRecoilValue(channelAtom);
-	const [channelView, setChannelView] = useRecoilState(channelViewAtom);
-    
 
 	return (
 		<form className='channel-tab wireframe'>

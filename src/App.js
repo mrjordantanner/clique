@@ -22,6 +22,7 @@ import {
 	channelState as channelAtom,
 	channelViewState as channelViewAtom,
 	generalState as generalAtom,
+	messagesState as messagesAtom
 } from './atoms';
 
 
@@ -31,10 +32,9 @@ function App() {
 	// RECOIL STATES
 	const [channels, setChannels] = useRecoilState(channelsAtom);
 	const [channel, setChannel] = useRecoilState(channelAtom);
-
+	const [channelView, setChannelView] = useRecoilState(channelViewAtom);
 	const [general, setGeneral] = useRecoilState(generalAtom);
-
-
+    const [messages, setMessages] = useRecoilState(messagesAtom);
 
 	const blankUser = {
 		name: null,
@@ -48,43 +48,16 @@ function App() {
 	// All users currently logged in
 	const [users, setUsers] = useState();
 
-	// Channel user is currently in
-	// const [channel, setChannel] = useState(null);
-
-	// All chat channels (other than General)
-	// const [channels, setChannels] = useState([]);
-	// General chat channel (all users always connected to this)
-	// const [generalChannel, setGeneralChannel] = useState();
-	let generalChannel;
-
 	// Socket this user is using
 	const [socket, setSocket] = useState(null);
-
-	// All messages in the current channel
-	const [messages, setMessages] = useState([]);
-
-	// const [channelToRender, setChannelToRender] = useState(generalChannel);
-
-    // called from the Chat tabs, this tells the messages panel
-    // which channel's messages to render
-    // It does not join/leave any channels
-
-    // TODO: Make sure these variables are referencing the channel object
-    // that has data, not just the channel id
-
-    // function displayGeneralMessages() {
-    //     setChannelToRender(generalChannel);
-    // }
-
-    // function displayChannelMessages() {
-    //     setChannelToRender(channel);
-    // }
 
 	useEffect(() => {
 		loadUserData();
    		 // getUsers();
 		getChannels();
     	getGeneralChannel();
+		// console.log(general);
+	
   		// joinGeneralChannel();
 		// joinLastChannel();
 	}, []);
@@ -118,12 +91,15 @@ function App() {
 	}
 
   	function getGeneralChannel() {
-		fetch(`${APIurl}/channels/name/General`)
+		fetch(`${APIurl}/general/name/General`)
 			.then((res) => res.json())
-			// .then((res) => console.log(`General channel: ${res}`))
+			// .then((res) => console.log(`General channel res: ${res.name}`))
 			.then((res) => setGeneral(res))
-			// .then(console.log(`General channel: ${generalChannel}`))
+			.then(configureSocket())
+			.then(setChannelView(general))
 			.catch(console.error);
+
+		console.log(`Got General channel: ${general.name}`)
 	}
 
 	function getChannels() {
@@ -154,21 +130,14 @@ function App() {
 		});
 
 		socket.on('channel', (channel) => {
-			// console.log('Socket: CHANNEL');
-			// channels.forEach(c => {
-			//     if (c._id === channel._id) {
-			//         c.participants = channel.participants;
-			//     }
-			// });
 			setChannel(channel);
 			console.log(`Set channel: ${channel.name}`);
 		});
 
-		// 3) Listen for new messages
-		socket.on('message', (message) => {
+		// 3A) Listen for new CHANNEL messages
+		socket.on('channel-message', (message) => {
 			// Iterate through channels and find which one the incoming
-			// message belongs in.  Then push it into that channel's messages
-			// array.
+			// message belongs in.  Then push it into that channel's messages array
 			channels.forEach((c) => {
 				if (c._id === message.channel_id) {
 					if (!c.messages) {
@@ -183,6 +152,14 @@ function App() {
 			console.log(`${message.messageData.sender}: ${message.messageData.text}`);
 		});
 
+		// 3B) Listen for new GENERAL messages
+		socket.on('general-message', (message) => {
+			console.log(`${message.messageData.sender}: ${message.messageData.text}`);
+			console.log(`General: ${general}`);
+				general.messages?.push(message);
+				setMessages(general.messages);
+		});
+	
 		setSocket(socket);
 	};
 
@@ -197,48 +174,11 @@ function App() {
 		// console.log(`${channel.name} channel selected.`);
 	};
 
-	// const handleSendMessage = (channelId, formValue) => {
-	// 	// Construct outgoing messageData object
-	// 	const messageData = {
-	// 		text: formValue,
-	// 		channelId: channelId,
-	// 		socketId: socket.id,
-	// 		sender: localStorage.getItem('userName'),
-	// 		id: Date.now(),
-	// 	};
-
-	// 	// Post message to database
-	// 	axios({
-	// 		url: `${APIurl}/messages`,
-	// 		method: 'POST',
-	// 		headers: {
-	// 			Authorization: `Bearer ${localStorage.getItem('token')}`,
-	// 		},
-	// 		data: messageData,
-	// 	}).catch(console.error);
-
-	// 	// 1) Emit message to the backend
-	// 	socket.emit('send-message', { messageData });
-	// };
-
-
-
-
 	return (
 		<div>
 			<Switch>
 				<Route exact path='/'>
 					{activeUser.name ? (
-						// <MainView
-						// 	channel={channel}
-						// 	setChannel={setChannel}
-						// 	handleLogout={handleLogout}
-						// 	activeUser={activeUser}
-						// 	channels={channels}
-						// 	generalChannel={generalChannel}
-						// 	handleChannelSelect={handleChannelSelect}
-						// 	handleSendMessage={handleSendMessage}
-						// />
 
 						<div className='grid'>
 							<header className='wireframe'>
@@ -251,26 +191,6 @@ function App() {
 
 							<article className='wireframe'>
 								<MainView />
-
-								{/* <div className='channelList'>
-									{channels.length > 0 ? (
-										channels.map((c) => (
-											<Channel
-												key={c._id}
-												id={c._id}
-												name={c.name}
-												// participants={c.participants}
-												messages={c.messages}
-												onClick={handleClick}
-											/>
-										))
-									) : (
-										<div>No channels</div>
-									)}
-								</div>
-								); */}
-
-
 							</article>
 
 							<aside className='sidebar-right wireframe'>

@@ -86,7 +86,9 @@ export default function Widget( { getWidgetData, pushColor } ) {
         bounds='parent'
         onMouseDown={handleMouseDown}
         onDrag={getWidgetData}>
-          <div className='widget hexagon' id='draggable' ref={widget}></div>
+          <div className='widget' id='draggable' ref={widget}>
+            <div className='hexagon'></div>
+          </div>
       </Draggable>
 
       // <div className='hexagon' ref={drag} role="Box" style={{ ...style, opacity }} data-testid={`box-${name}`}></div>

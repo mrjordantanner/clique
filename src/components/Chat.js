@@ -16,27 +16,30 @@ import {
 } from '../atoms';
 
 //region [Blue]
-export default function Chat( { generalChannel, socket } ) {
-	// Renders chat-related components
-	const dummy = useRef();
+export default function Chat( { socket } ) {
+
+	const bottom = useRef();
 
     const channel = useRecoilValue(channelAtom);
 	const channels = useRecoilValue(channelsAtom);
-	const channelView = useRecoilValue(channelViewAtom);
+    const [channelView, setChannelView] = useRecoilState(channelViewAtom);
     const general = useRecoilValue(generalAtom);
     const [messages, setMessages] = useRecoilState(messagesAtom);
 
 	useEffect(() => {
 
+        // TODO: Put re-render code here
 		scrollToBottom();
-
+        console.log(`Viewing Channel: ${channelView.name}`);
 	}, [channel, channelView, messages]);
 
 	const scrollToBottom = () => {
-		dummy.current?.scrollIntoView({ behavior: 'smooth' });
+		// bottom.current?.scrollIntoView({ behavior: 'smooth' });
+        bottom.current?.scrollIntoView();
 	};
 
-    const handleSendMessage = (channelId, formValue) => {
+    // SEND MESSAGE TO CLIQUE CHANNEL
+    const handleSendToChannel = (channelId, formValue) => {
 		// Construct outgoing messageData object
 		const messageData = {
 			text: formValue,
@@ -56,30 +59,64 @@ export default function Chat( { generalChannel, socket } ) {
 			data: messageData,
 		}).catch(console.error);
 
+        setMessages(channel.messages)
+		setChannelView(channel);
+
 		// 1) Emit message to the backend
-		socket.emit('send-message', { messageData });
+		socket.emit('send-message-channel', { messageData });
+	};
+
+    //SEND MESSAGE TO GENERAL CHANNEL
+    const handleSendToGeneral = (formValue) => {
+		// Construct outgoing messageData object
+		const messageData = {
+			text: formValue,
+			channelId: general._id,
+			socketId: socket.id,
+			sender: localStorage.getItem('userName'),
+			id: Date.now(),
+		};
+
+		// Post message to database
+		axios({
+			url: `${APIurl}/messages/general`,
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			},
+			data: messageData,
+		}).catch(console.error);
+
+        setMessages(general.messages)
+		setChannelView(general);
+
+		// 1) Emit message to the backend
+		socket.emit('send-message-general', { messageData });
 	};
 
 	return (
-		<div>
+		<div className='chat-container'>
 			<div className='tab-container'>
 				<GeneralTab />
 				<ChannelTab />
 			</div>
-			<div className='messages-panel'>
-				<div>
-					{channelView.messages ? (
-						channelView.messages.map((m) => (
-							<Message key={m._id} id={m._id} sender={m.sender} text={m.text} />
-						))
-					) : (
-						<div>No messages.</div>
-					)}
-					<div ref={dummy}></div>
-				</div>
-			</div>
 
-			<MessageInput channel={channel} handleSendMessage={handleSendMessage} />
+            <div className='messages-panel wireframe'>
+                {channelView.messages ? (
+                    channelView.messages.map((m) => (
+                        <Message key={m._id} id={m._id} sender={m.sender} text={m.text} />
+                    ))
+                ) : (
+                    <div>No messages.</div>
+                )}
+                <div ref={bottom}></div>
+            </div>
+
+			<MessageInput 
+                channel={channel} 
+                handleSendToChannel={handleSendToChannel}
+                handleSendToGeneral={handleSendToGeneral}
+            />
 		</div>
 	);
 }

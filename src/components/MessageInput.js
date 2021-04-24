@@ -4,22 +4,25 @@ import {
 	channelState as channelAtom,
 	channelViewState as channelViewAtom,
 	messagesState as messagesAtom,
+	generalState as generalAtom
 } from '../atoms';
 
 
-export default function MessageInput({ handleSendMessage } ) {
+export default function MessageInput({ handleSendToChannel, handleSendToGeneral } ) {
 
     const [formValue, setFormValue] = useState('');
-
+	const general = useRecoilValue(generalAtom);
 	const channel = useRecoilValue(channelAtom);
 	const [channelView, setChannelView] = useRecoilState(channelViewAtom);
     const [messages, setMessages] = useRecoilState(messagesAtom);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        handleSendMessage(channel._id, formValue);
-		setMessages(channel.messages)
-		setChannelView(channel);
+		console.log(`InputField sending msg to channel: ${channelView}`)
+		channelView === general ? 
+			handleSendToGeneral(formValue) :
+			handleSendToChannel(channel._id, formValue);
+
         setFormValue('');
       }
 

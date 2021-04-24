@@ -7,6 +7,10 @@ html, body {
     --targetB: 0;
 }
 
+$clique-green: #35FF86;
+$user-color: magenta;
+$widget-hover-border: $clique-green;
+
 .widget-container {
     display: flex;
     justify-content: center;
@@ -21,12 +25,13 @@ html, body {
 
 // WIDGETS
 .widget {
-   
+    opacity: 1;
 
 
     &:hover {
         opacity: 0.9;
         cursor: pointer;
+        // border: 1px solid $widget-hover-border;
     }
     
     // BALL
@@ -51,26 +56,19 @@ html, body {
         }
     }
 
-
-
-
-
-}
-
-
-
-// HEX
+    // HEX
     // https://codepen.io/airen/pen/dXZgyq
     .hexagon {
         width: 80px;
         height: 40px;
-        background: #35FF86;
+        background: $user-color;
         // margin: 150px auto;
         position: relative;
+
       
       &:before,
       &:after {
-        content: "";
+        content: '';
           position: absolute;
           width: 0;
           height: 0;
@@ -81,16 +79,25 @@ html, body {
           left: 0;
           border-left: 40px solid transparent;
           border-right: 40px solid transparent;
-          border-bottom: 25px solid #35FF86;
+          border-bottom: 25px solid $user-color;
       }
       &:after {
         bottom: -25px;
           left: 0;
           border-left: 40px solid transparent;
           border-right: 40px solid transparent;
-          border-top: 25px solid #35FF86;
+          border-top: 25px solid $user-color;
       }
     }
+
+
+
+
+
+}
+
+
+
 
 
 
