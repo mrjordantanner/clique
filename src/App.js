@@ -26,7 +26,7 @@ import {
 } from './atoms';
 
 
-//region [Purple]
+//region [Violet]
 function App() {
 
 	// RECOIL STATES
@@ -56,9 +56,7 @@ function App() {
    		 // getUsers();
 		getChannels();
     	getGeneralChannel();
-		// console.log(general);
-	
-  		// joinGeneralChannel();
+	  		// joinGeneralChannel();
 		// joinLastChannel();
 	}, []);
 
@@ -77,7 +75,11 @@ function App() {
 		}
 	}
 
+	// Mark user as logged out and clear localStorage user references
 	function handleLogout() {
+		axios
+		.patch(`${APIurl}/users/logout/${activeUser.name}`) 
+		.catch((err) => console.error(err));
 		localStorage.clear();
 		setActiveUser(blankUser);
 	}
@@ -86,20 +88,17 @@ function App() {
 	function joinLastChannel() {
 		const currentChannelId = localStorage.getItem('channel');
 		if (currentChannelId)
-			joinChannelById(currentChannelId);
-		
+			joinChannel(currentChannelId);
 	}
 
   	function getGeneralChannel() {
-		fetch(`${APIurl}/general/name/General`)
+		fetch(`${APIurl}/channels/general`)
 			.then((res) => res.json())
 			// .then((res) => console.log(`General channel res: ${res.name}`))
 			.then((res) => setGeneral(res))
 			.then(configureSocket())
 			.then(setChannelView(general))
 			.catch(console.error);
-
-		console.log(`Got General channel: ${general.name}`)
 	}
 
 	function getChannels() {
@@ -136,8 +135,6 @@ function App() {
 
 		// 3A) Listen for new CHANNEL messages
 		socket.on('channel-message', (message) => {
-			// Iterate through channels and find which one the incoming
-			// message belongs in.  Then push it into that channel's messages array
 			channels.forEach((c) => {
 				if (c._id === message.channel_id) {
 					if (!c.messages) {
@@ -163,15 +160,14 @@ function App() {
 		setSocket(socket);
 	};
 
-	function joinChannelById(id) {
+	function joinChannel(id) {
 		let channel = channels.find((c) => {
 			return c._id === id;
 		});
 
 		setChannel(channel);
 		localStorage.setItem('channel', channel._id);
-		socket.emit('channel-join', id);//, () => {});
-		// console.log(`${channel.name} channel selected.`);
+		socket.emit('channel-join', id);
 	};
 
 	return (
@@ -194,7 +190,7 @@ function App() {
 							</article>
 
 							<aside className='sidebar-right wireframe'>
-								<Chat socket={socket}/>
+								<Chat socket={socket} configureSocket={configureSocket} />
 							</aside>
 						</div>
 					) : (

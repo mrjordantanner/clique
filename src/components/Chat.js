@@ -16,7 +16,7 @@ import {
 } from '../atoms';
 
 //region [Blue]
-export default function Chat( { socket } ) {
+export default function Chat( { socket, configureSocket } ) {
 
 	const bottom = useRef();
 
@@ -79,7 +79,7 @@ export default function Chat( { socket } ) {
 
 		// Post message to database
 		axios({
-			url: `${APIurl}/messages/general`,
+			url: `${APIurl}/messages`,
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem('token')}`,

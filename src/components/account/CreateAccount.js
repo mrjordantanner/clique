@@ -4,12 +4,15 @@ import axios from 'axios';
 import APIurl from '../../config';
 
 const CreateAccount = () => {
-	const initialState = {
+
+	const newUserState = {
 		name: '',
+		password: '',
+		loggedIn: false
 	};
 
 	const history = useHistory();
-	const [newUser, setNewUser] = useState(initialState);
+	const [newUser, setNewUser] = useState(newUserState);
 	const [signUpError, setSignUpError] = useState(false);
 
 	const handleChange = (event) => {
@@ -24,6 +27,8 @@ const CreateAccount = () => {
 				history.push(`/`);
 			})
 			.catch(() => setSignUpError(true));
+
+		
 	};
 
 	return (

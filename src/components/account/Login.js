@@ -25,14 +25,15 @@ const Login = ( { setActiveUser } ) => {
 		.then(({ data }) => {
 			localStorage.setItem('token', data.token);
 			// localStorage.setItem('expiration', Date.now() + 360000);
-			const user = {
+			const userData = {
 				name: loginData.name,
 				token: data.token
 			}   
-			setActiveUser(user);
+			setActiveUser(userData);
 			localStorage.setItem('userName', loginData.name);
 			history.push('/');
 		})
+		.then(axios.patch(`${APIurl}/users/login/${loginData.name}`))  // Mark user as logged in
 		.catch(() => setLoginError(true));
 	};
 
