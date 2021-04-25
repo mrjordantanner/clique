@@ -34,7 +34,7 @@ export default function Channel(props) {
 			return c._id === props.id;
 		});
 
-        // TODO: Call join channel function
+        // TODO: make join channel function
         setChannel(thisChannel);
 
         // Set channel view to this channel to trigger chat re-render

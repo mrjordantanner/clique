@@ -16,49 +16,83 @@ import CreateAccount from './components/account/CreateAccount';
 import APIurl from './config';
 import axios from 'axios';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil';
 import {
 	channelsState as channelsAtom,
 	channelState as channelAtom,
 	channelViewState as channelViewAtom,
-	generalState as generalAtom,
-	messagesState as messagesAtom
+	// generalState as generalAtom,
+	messagesState as messagesAtom,
+	usersState as usersAtom,
+	activeUserState as activeUserAtom,
 } from './atoms';
+
 
 
 //region [Violet]
 function App() {
 
+	function getChannelById(id) {
+		// return channels.find(c => c._id === id)
+		channels.filter((channel) => {
+			return channel._id === id;
+		})
+	}
+
 	// RECOIL STATES
 	const [channels, setChannels] = useRecoilState(channelsAtom);
 	const [channel, setChannel] = useRecoilState(channelAtom);
 	const [channelView, setChannelView] = useRecoilState(channelViewAtom);
-	const [general, setGeneral] = useRecoilState(generalAtom);
-    const [messages, setMessages] = useRecoilState(messagesAtom);
+	// const [general, setGeneral] = useRecoilState(generalAtom);
+
+	const [users, setUsers] = useRecoilState(usersAtom);
+	const [activeUser, setActiveUser] = useRecoilState(activeUserAtom);
+
+	const messages = useRecoilValue(messagesAtom);
+	const setMessages = useSetRecoilState(messagesAtom);
+
+	// const [messages, setMessages] = useRecoilState(messagesAtom);
+
+	const [socket, setSocket] = useState();
 
 	const blankUser = {
 		name: null,
 		token: null,
 		channel: null,
 	};	
-	
-	// User we are currently logged in as
-	const [activeUser, setActiveUser] = useState(blankUser);
-
-	// All users currently logged in
-	const [users, setUsers] = useState();
-
-	// Socket this user is using
-	const [socket, setSocket] = useState(null);
 
 	useEffect(() => {
-		loadUserData();
-   		 // getUsers();
+		// init();
+
 		getChannels();
-    	getGeneralChannel();
-	  		// joinGeneralChannel();
-		// joinLastChannel();
+   		getUsers();
+		loadUserData();
+		setChannelView('001');
+		setMessages(getChannelById(channelView).messages);
+		joinLastChannel();
+		printReport();
 	}, []);
+
+
+	const reportHeaderStyle = 'background-color: #121212 ; color: magenta ; font-weight: bold ;'
+	const reportRowStyle = 'background: #343434 ; color: lightgray ; font-weight: regular ; display: block ; width: 100%; '
+
+	function printReport() {
+		// console.clear();
+
+		const targetChannel = getChannelById(channelView);
+
+		console.log(`%c`, reportRowStyle);
+		console.log(`%c--- Report ---`, reportHeaderStyle);
+		// console.log(`%c`, reportRowStyle);
+		console.log(`%cChannel: ${channel.name},${channel._id}`, reportRowStyle);
+		console.log(`%cChannelView: ${targetChannel?.name}, ${targetChannel?._id}`, reportRowStyle);
+		console.log(`%cChannelView.Messages: ${targetChannel?.messages?.length}`, reportRowStyle);
+		console.log(`%cUsers logged in: ${users?.length}`, reportRowStyle);
+		// console.log(`%cLatest Message: ${channelView?.messages[channelView?.messages?.length - 1 || 0]?.text}`, reportRowStyle);
+		console.log(``);
+
+	}
 
 	// load active user data from localStorage if it exists, in case of browser reload
 	// TODO: Improve this by using Passport to save logged in user instead
@@ -91,37 +125,57 @@ function App() {
 			joinChannel(currentChannelId);
 	}
 
-  	function getGeneralChannel() {
-		fetch(`${APIurl}/channels/general`)
-			.then((res) => res.json())
-			// .then((res) => console.log(`General channel res: ${res.name}`))
-			.then((res) => setGeneral(res))
-			.then(configureSocket())
-			.then(setChannelView(general))
-			.catch(console.error);
-	}
-
 	function getChannels() {
-		fetch(`${APIurl}/channels`)
+		return fetch(`${APIurl}/channels`)
 			.then((res) => res.json())
 			.then((res) => setChannels(res))
-			.then(configureSocket())
+		    .then(configureSocket())
+			.then(() => {
+				setChannelView('001');
+				setMessages(getChannelById(channelView).messages)
+				console.log(`.then Messages: ${messages}`)
+			})
 			.catch(console.error);
 	}
 
-  // TODO: Check which users are authenticated and only return those
-  function getUsers() {
-    fetch(`${APIurl}/users`)
-    .then((res) => res.json())
-    .then((res) => setUsers(res))
-    .catch(console.error);
-  }
+
+  	// function getGeneralChannel() {
+	// 	fetch(`${APIurl}/channels/general`)
+	// 		.then((res) => res.json())
+	// 		.then((res) => setGeneral(res))
+	// 		// .then(setChannelView(general))
+	// 		.then(configureSocket())
+	// 		.then(console.log('got general'))
+	// 		// .then(console.log(`Get General: ${JSON.stringify(general, null, 4)}`))
+
+	// 			setMessages(channelView.messages);
+	// 			console.log(`%cChannelView after loading:`, reportRowStyle)
+	// 			console.log(channelView);
+
+	// 		})			
+	// 		.catch(console.error);
+	// }
+
+	// change how channelView works
+	// make it hold the id of the channel in view, not a clone of the object
+
+
+
+
+	// Get all users that are logged in
+	function getUsers() {
+		fetch(`${APIurl}/users/loggedIn`)
+			.then((res) => res.json())
+			.then((res) => setUsers(res))
+			.catch(console.error);
+	}
 
 	const configureSocket = () => {
+
 		const socket = socketClient(APIurl);
 
 		socket.on('connection', () => {
-			console.log('Socket connected.');
+			console.log(`Socket connected: ${socket.id}`);
 		});
 
    		socket.on('connection-general', () => {
@@ -134,14 +188,19 @@ function App() {
 		});
 
 		// 3A) Listen for new CHANNEL messages
-		socket.on('channel-message', (message) => {
+		socket.on('message', (message) => {
 			channels.forEach((c) => {
 				if (c._id === message.channel_id) {
-					if (!c.messages) {
-						c.messages = [message];
-					} else {
-						c.messages.push(message);
-					}
+					// if (!c.messages) {
+					// 	c.messages = [message];
+					// } else {
+					const currentState = c.messages;
+					setMessages((currentState) => [
+						...currentState,
+						message,
+					  ]);
+					// c.messages.push(message);
+					// }
 				}
 				setMessages(c.messages);
 			});
@@ -149,12 +208,17 @@ function App() {
 			console.log(`${message.messageData.sender}: ${message.messageData.text}`);
 		});
 
-		// 3B) Listen for new GENERAL messages
-		socket.on('general-message', (message) => {
-			console.log(`${message.messageData.sender}: ${message.messageData.text}`);
-			console.log(`General: ${general}`);
-				general.messages?.push(message);
-				setMessages(general.messages);
+		// 3B) Listen for new messages
+		socket.on('message', (message) => {
+			console.log('new msg received');
+
+			
+			// if (!general.messages) {
+			// 	general.messages = [message];
+			// } else {
+			// 	general.messages.push(message);
+			// }
+			// setMessages(general.messages);
 		});
 	
 		setSocket(socket);
@@ -190,7 +254,7 @@ function App() {
 							</article>
 
 							<aside className='sidebar-right wireframe'>
-								<Chat socket={socket} configureSocket={configureSocket} />
+								<Chat socket={socket} configureSocket={configureSocket} printReport={printReport} getChannels={getChannels}/>
 							</aside>
 						</div>
 					) : (
