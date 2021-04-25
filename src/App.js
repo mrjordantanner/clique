@@ -1,6 +1,9 @@
+// Clique v0.1
+// by Jordan T. Smith / @jtscodes
+// General Assembly SEIR-201 Final Project
+// April 26, 2021
 
 import './styles/styles.scss';
-
 import React, { useState, useEffect } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import socketClient from "socket.io-client";
@@ -17,19 +20,12 @@ import CreateAccount from './components/account/CreateAccount';
 //region [Violet]
 function App() {
 
-	// function getChannelById(id) {
-	// 	return channels.find(channel => channel._id === id)
-	// }
-
 	const blankUser = {
 		name: null,
 		token: null,
 		channel: null,
 	};
 
-	// const [channel, setChannel] = useState({});	
-	// const [channels, setChannels] = useState([]);
-	// const [targetChannel, setTargetChannel] = useState({});
 	const [activeUser, setActiveUser] = useState({});
 
 	useEffect(() => {
@@ -39,17 +35,11 @@ function App() {
 		printReport();
 	}, []);
 
-	// const general = getGeneral();
-	// const channels = getChannels();
-	// const users = getUsers();
-	// changeTargetChannel(general);
-
 	const socket = socketClient(APIurl);
 	configureSocket();
 
 	function printReport() {
 		// console.clear();
-
 		// console.log(`------`);
 		// console.log(`General Channel: ${general.name}, ${general._id}`);
 		// console.log(`Clique Channels: ${channels.length}`);
@@ -113,13 +103,17 @@ function App() {
 	// 	// console.log(`Set Target Channel: ${targetChannel.name}, ${targetChannel._id}`)
 	// }
 
+
 	function configureSocket() {
+
+		
 
 		socket.on('connection', () => {
 			console.log(`Socket connected: ${socket.id}`);
 		});
 
-		socket.on('message', (message) => {
+		// Receive message from server
+		socket.on('push', (message) => {
 			// Message logic here
 			console.log(`${message.messageData.sender}: ${message.messageData.text}`);
 		});

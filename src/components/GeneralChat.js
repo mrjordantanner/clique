@@ -12,14 +12,10 @@ export default function GeneralChat( { socket } ) {
     const [channel, setChannel] = useState(null);
     const [messages, setMessages] = useState([]);
 
-      // or should the state be messages, and do setMessages(res.messages) in useeffect?
-
-
-	useEffect(() => {
+    useEffect(() => {
 		fetch(`${APIurl}/general`)
 			.then((res) => res.json())
-			.then((res) => setChannel(res))
-            // .then((res) => setMessages(res.messages))    
+            .then((res) => setChannel(res))
 			.catch(console.error);
 
         scrollToBottom();
@@ -50,12 +46,13 @@ export default function GeneralChat( { socket } ) {
 			},
 			data: messageData,
         })
+            .catch(console.error)
 			.then(({ data }) => {   
-				setMessages(data.messages);
+				setMessages(data.channel.messages);   
 			})
 			.catch(console.error);
 
-		// 1) Emit message to the backend
+		// Emit message to the backend
 		socket.emit('send-message', { messageData });
 	};
 
