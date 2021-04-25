@@ -1,50 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import UserSlot from './UserSlot';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-	channelState as channelAtom,
-    channelsState as channelsAtom,
-	channelViewState as channelViewAtom,
-} from '../../atoms';
+// import UserSlot from './UserSlot';
 
-export default function Channel(props) {
+export default function Channel( { channels, channelId, joinChannel }) {
 
-    // Currently, this is only a button the user clicks on
-    // to change chat channels
+    // Represents chat channel in the Main View
+    // Clicking (or dragging into) it passes up the channel id
 
-    // Ideally, it will represent a group of userSlots that
-    // users can drag their widgets into to connect to the channel
-    // const channelDataState = {
-    //     id: null,
-    //     name: null,
-    //     slots: null,      // array of userSlots in this channel
-    //     users: null,      // array of users currently in the channel
-    //     admin: null       // user who created the channel (only they can modify or delete it)
-    // }
-    // const [channelData, setChannelData] = useState(channelDataState);
+    const [channel, setChannel] = useState(null);
 
-    const channels = useRecoilValue(channelsAtom);
-	const [channel, setChannel] = useRecoilState(channelAtom);
-    const [channelView, setChannelView] = useRecoilState(channelViewAtom);
+    useEffect(() => {
+        let chan = channels?.find(c => c._id === channelId);
+        setChannel(chan);
+    }, [])
 
     const click = () => {
-        // props.onClick(props.id);
-
-		let thisChannel = channels.find((c) => {
-			return c._id === props.id;
-		});
-
-        // TODO: make join channel function
-        setChannel(thisChannel);
-
-        // Set channel view to this channel to trigger chat re-render
-        setChannelView(thisChannel);
+        joinChannel(channel);
     }
 
     return (
         <div className='channel-item' onClick={click}>
-            <div>{props.name}</div>
-            {/* <span>{props.participants}</span> */}
+            <div>{channel?.name}</div>
         </div>
     )
    

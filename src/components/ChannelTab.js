@@ -1,18 +1,10 @@
 import React from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-	channelState as channelAtom,
-	channelViewState as channelViewAtom,
-} from '../atoms';
 
-export default function ChannelTab() {
-
-    const channel = useRecoilValue(channelAtom);
-	const [channelView, setChannelView] = useRecoilState(channelViewAtom);
+export default function ChannelTab( { channel, showGeneral } ) {
 
 	function handleClick(e) {
 		e.preventDefault();
-        setChannelView(channel);
+        showGeneral(false);
 	}
 
 	return (
@@ -20,8 +12,8 @@ export default function ChannelTab() {
 			{channel ? (
 				<button onClick={handleClick}>{channel.name}</button>
 			) : (
-				<button className='disabled' disabled={true}>
-					No channel
+				<button disabled={true}>
+					No Clique Channel
 				</button>
 			)}
 		</form>

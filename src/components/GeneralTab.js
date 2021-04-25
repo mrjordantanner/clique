@@ -1,28 +1,15 @@
 import React, { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-	channelViewState as channelViewAtom,
-    generalState as generalAtom,
-} from '../atoms';
 
-export default function GeneralTab() {
-
-    const general = useRecoilValue(generalAtom);
-	const [channelView, setChannelView] = useRecoilState(channelViewAtom);
-
-    useEffect(() => {
-        setChannelView(general);
-    }, [])
+export default function GeneralTab( { showGeneral } ) {
 
     function handleClick(e) {
         e.preventDefault();
-        setChannelView(general);
+        showGeneral(true);
     }
-
 
     return (
         <form className='channel-tab'>
-            <button onClick={handleClick}>General</button>
+            <button onClick={handleClick}>General Channel</button>
         </form>
     )
 }
