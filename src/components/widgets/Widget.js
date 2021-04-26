@@ -6,12 +6,24 @@ import useSound from 'use-sound';
 import boom from '../../audio/808_Soft.wav';
 import { useDrag } from 'react-dnd';
 
+import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil';
+import {
+	channelsState as channelsAtom,
+	channelState as channelAtom,
+	targetChannelState as targetChannelAtom,
+	messagesState as messagesAtom,
+	usersState as usersAtom,
+	activeUserState as activeUserAtom,
+	socketState as socketAtom
+} from '../../atoms';
+
 export default function Widget( { getWidgetData, pushColor } ) {
     
     const widget = useRef();
     const uid = null;
-    // const database = firebase.database();
     const [play] = useSound(boom);
+
+    const [socket, setSocket] = useRecoilState(socketAtom);
 
     const grow = anime({
       targets: '.ball',
@@ -26,31 +38,37 @@ export default function Widget( { getWidgetData, pushColor } ) {
       e.preventDefault();
       // play();
       // grow.restart();
-      // getWidgetData();
       // pushColor();
       // console.log('mouseDown on widget');
     }
 
 
-  // Get and emit widget position and size
-  // function getWidgetData() {
-  //   const data = {
-  //     x: widget.current.getClientRects()[0].x,
-  //     y: widget.current.getClientRects()[0].y,
-  //     width: widget.current.getClientRects()[0].width,
-  //     height: widget.current.getClientRects()[0].height
-  //   }
-      // database.ref('users/' + auth.currentUser.uid).set({
-      //     name: auth.currentUser.displayName.split(' ')[0],
-      //     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      //     uid: auth.currentUser.uid,
-      //     photoURL: auth.currentUser.photoURL
-      //   });
-      //   console.log('User data written')
-  // }
 
- // Receive widget data and update position
-  // socket.on('update_data', function (data) {
+  // Get and emit widget position and size
+  // function sendWidgetData() {
+
+    // const widgetData = {
+    //   x: widget.current.getClientRects()[0].x,
+    //   y: widget.current.getClientRects()[0].y,
+    //   width: widget.current.getClientRects()[0].width,
+    //   height: widget.current.getClientRects()[0].height
+    // }
+
+    // console.log(`x:${widgetData.x}, y:${widgetData.y}`);
+
+    // setInterval(() => {
+    //   socket.emit('update-widget', { widgetData });
+    //   // console.log(`x:${widgetData.x}, y:${widgetData.y}`);
+    // }, 100);
+
+
+
+  // }
+  
+
+  
+
+
 
 
   //   const ItemTypes = {
@@ -83,9 +101,10 @@ export default function Widget( { getWidgetData, pushColor } ) {
 
     return(
       <Draggable
-        bounds='parent'
+        // bounds='parent'
         onMouseDown={handleMouseDown}
-        onDrag={getWidgetData}>
+        // onDrag={sendWidgetData}
+        >
           <div className='widget' id='draggable' ref={widget}>
             <div className='hexagon'></div>
           </div>

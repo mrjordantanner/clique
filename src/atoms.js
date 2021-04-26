@@ -7,7 +7,7 @@ export const channelsState = atom({
 
 export const channelState = atom({
 	key: "channel",
-	default: ''
+	default: {}
 });
 
 export const generalState = atom({
@@ -15,14 +15,9 @@ export const generalState = atom({
 	default: {}
 });
 
-export const channelViewState = atom({
-	key: "channelView",
-	default: '001'
-});
-
-export const messagesState = atom({
-	key: "messages",
-	default: []
+export const targetChannelState = atom({
+	key: "targetChannel",
+	default: {}
 });
 
 export const usersState = atom({
@@ -37,4 +32,9 @@ export const activeUserState = atom({
 		token: null,
 		channel: null,
 	}
+});
+
+export const socketState = atom({
+	key: "socket",
+	default: {}
 });
