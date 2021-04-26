@@ -36,7 +36,7 @@ export default function Chat({
 	return (
 		<div className='chat-container'>
 			<div className='tab-container'>
-				<GeneralTab setGeneral={setGeneral} />
+				<GeneralTab setGeneral={setGeneral} general={general} />
 				<ChannelTab 
 					currentChannel={currentChannel} 
 					setGeneral={setGeneral} />
@@ -56,8 +56,7 @@ export default function Chat({
 					setMessages={setMessages}
 				/>
 			)}
-
-			
+		
 		</div>
 	);
 }

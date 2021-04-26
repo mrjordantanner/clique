@@ -2,27 +2,35 @@ import React, { useRef, useState, useEffect } from 'react';
 import Widget from '../widgets/Widget';
 import '../../styles/widgets.scss';
 import Channels from './Channels';
+import Container from '../../components/DnD/Container';
 
-export default function MainView({ joinChannel, leaveChannel }) {
+
+export default function MainView({ joinChannel, leaveChannel, activeUser, currentChannel, incrementClickCounter }) {
 
     let Draggable = require('react-draggable');
 	const container = useRef();
 
     return (
-		<div className='wireframe'>
+		<div className=''>
 			<div className='widget-container' ref={container}>
 
-			<Widget />
+			<Widget activeUser={activeUser} incrementClickCounter={incrementClickCounter} />
 
-			<Channels joinChannel={joinChannel} />
+			<Channels joinChannel={joinChannel} currentChannel={currentChannel} />
+
+			{/* <Container /> */}
 
 
-			<div className='channel-item' onClick={leaveChannel}>
-				Leave Channel
+
+
 			</div>
 
+			{currentChannel &&
+				<button className='leave-channel-button' onClick={leaveChannel}>
+					Leave Channel
+				</button>
+			}
 
-			</div>
 		</div>
 	);
 }

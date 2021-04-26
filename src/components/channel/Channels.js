@@ -3,7 +3,7 @@ import APIurl from '../../config';
 import Channel from './Channel';
 import Loading from '../Loading';
 
-const Channels = ( { joinChannel } ) => {
+const Channels = ( { joinChannel, currentChannel } ) => {
 
     const [channels, setChannels] = useState([]);
 
@@ -20,19 +20,22 @@ const Channels = ( { joinChannel } ) => {
 
     return (
         <div className='channels-wrapper'>
-			<div className='channels-container'>
-				{channels.map((c) => {
-					return <Channel 
-                        key={c._id} 
-                        id={c._id} 
-                        name={c.name} 
-                        messages={c.messages}
-                        joinChannel={joinChannel}
-                    />;
-				})}
-			</div>
+            <div className='channels-container'>
+                {channels.map((c) => {
+                    return (
+                        <Channel
+                            key={c._id}
+                            id={c._id}
+                            name={c.name}
+                            messages={c.messages}
+                            joinChannel={joinChannel}
+                            currentChannel={currentChannel}
+                        />
+                    );
+                })}
+            </div>
         </div>
-    );
+		);
 };
 
 export default Channels;

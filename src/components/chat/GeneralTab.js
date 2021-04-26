@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 
-export default function GeneralTab( { setGeneral } ) {
+export default function GeneralTab( { currentChannel, setGeneral, general } ) {
 
     function handleClick(e) {
         e.preventDefault();
@@ -8,8 +8,20 @@ export default function GeneralTab( { setGeneral } ) {
     }
 
     return (
-        <form className='channel-tab'>
-            <button onClick={handleClick}>General Channel</button>
-        </form>
-    )
+        <>
+           {general ? (
+                <form className='general-tab selected'>
+                    <button onClick={handleClick}>
+                        <p>General Channel</p>
+                    </button>
+                </form>
+            ) : (
+                <form className='general-tab'>
+                    <button onClick={handleClick}>
+                        <p>General Channel</p>
+                    </button>
+                </form>
+            )}
+        </>
+    );
 }
