@@ -127,14 +127,16 @@ function App() {
 								<SideBar />
 							</aside>
 
-							<article className='wireframe'>
+							<article className=''>
 								<MainView 
 									joinChannel={joinChannel} 
 									leaveChannel={leaveChannel}
+									activeUser={activeUser}
+									currentChannel={currentChannel}
 								/>
 							</article>
 
-							<aside className='sidebar-right wireframe'>
+							<aside className='sidebar-right'>
 								<Chat 
 									currentChannel={currentChannel}
 									messages={messages} 

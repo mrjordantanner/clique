@@ -5,16 +5,13 @@ import './styles/index.css';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-// import { RecoilRoot } from 'recoil';
 
 ReactDOM.render(
-	// <DndProvider backend={HTML5Backend}>
-	// <RecoilRoot>
+	<DndProvider backend={HTML5Backend}>
 		<Router>
 			<App />
 		</Router>
-	// </RecoilRoot>
-	// </DndProvider>
+	</DndProvider>
 	,
 	document.getElementById('root')
 );

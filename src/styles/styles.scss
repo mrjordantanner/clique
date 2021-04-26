@@ -10,10 +10,14 @@
 $clique-green: #35FF86;
 $not-black: #121212;
 $also-not-black: #303030;
+$background-main: #272727;
+$panels: #252525;
+$stroke-light: #BDBDBD;
+$stroke-highlight: #56CCF2;
 
 html,
 body {
-	background: $not-black;
+	background: $background-main;
 	color: white;
 	font-family: 'Roboto', sans-serif;
 	font-weight: 200;
@@ -23,33 +27,58 @@ body {
 	overflow: hidden;
 }
 
-.channel-item {
-    width: 100px;
-    height: 100px;
-    display: flex;
-    flex-direction: row;
-    background: $not-black;
-    border: 1px solid lightgray;
-    padding: 10px;
-    opacity: 0.8;
-    color: $clique-green;
-
-    div {
-        font-weight: bold;
-    }
-
-    p {
-        font-size: 10px;
-    }
-
-    &:hover {
-        opacity: 1;
-        cursor: pointer;
-        background: $clique-green;
-        color: $not-black;
-        border: 1px solid chartreuse;
-    }
+img {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
+
+
+.channel {
+  
+
+
+
+  .channel-item {
+      // width: 100px;
+      // height: 100px;
+      display: flex;
+      flex-direction: row;
+      // background: $not-black;
+      // border: 1px solid lightgray;
+      padding: 10px;
+      margin: 10px;
+      opacity: 0.7;
+      color: $clique-green;
+      transition: all 0.15s;
+
+      &:hover {
+          opacity: 1;
+          cursor: pointer;
+          color: $not-black;
+      }
+
+      .channel-name {
+        position: absolute;
+        margin: 0 0 50px 100px;
+        font-family: 'Roboto', sans-serif;
+        font-style: italic;
+        font-weight: lighter;
+        font-size: 1rem;
+        color: white;
+    
+      }
+  }
+
+
+
+
+}
+
+
+
 
 
 
@@ -65,19 +94,21 @@ body {
 
     .channel-tab {
       width: 50%;
-      height: 50px;
+      height: 70px;
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
-    
+
       button {
         width: 100%;
         height: 100%;
         font-weight: bold;
+        font-size: 1.2rem;
+        text-align: center;
         outline: none;
-        color: $clique-green;
-        background: $not-black;
+        color: white;
+        background: transparent;
         border: 1px solid lightgray;
         opacity: 0.8;
 
@@ -97,6 +128,12 @@ body {
           pointer-events: none;
         }
 
+        .selected {
+          background: $clique-green;
+        }
+
+
+
       }
     }
 
@@ -113,8 +150,9 @@ body {
     margin-top: auto;
     overflow-y: scroll;
     scrollbar-width: none;
-    background: $not-black;
+    background: $panels;
     padding: 1rem 0.5rem;
+    border: 3px solid $stroke-highlight;
 
     .message {
       border-top: 1px #232323 solid;
@@ -122,12 +160,15 @@ body {
       display: flex;
       flex-direction: row;
       align-items: center;
-      line-height: 1.25rem;
+      line-height: 1rem;
       padding: 0 0.5rem;
     
       .sender {
         font-weight:bold;
+        color: $clique-green;
       }
+
+
 
     }
 
@@ -207,25 +248,19 @@ a {
 }
 
 
-ul, li {
-  display: inline;
-  margin: 0.5rem 2rem;
-  padding: 0.5rem 2rem;
-  text-align: right;
-  list-style: none;
-}
 
 
 .wireframe {
-  border: 1px solid #35FF86;
+  border: 1px solid $stroke-light;
 }
+
+
 
 // LAYOUT
 .grid {
   height: 100vh;
   display: grid;
-  grid-template-columns: 200px auto 375px;
-  // grid-template-rows: repeat(3, 30%);
+  grid-template-columns: 150px auto 350px;
   grid-template-rows: 50px auto 40px;
   grid-gap: 1em;
 }
@@ -241,18 +276,18 @@ header, footer {
   grid-template-rows: repeat(auto, 1fr);
 }
 
-.user-slot {
-  width:50px;
-  height:50px;
-  border: 1px gray solid;
-  background: lightblue;
-  opacity: 0.5;
+// .user-slot {
+//   width:50px;
+//   height:50px;
+//   border: 1px gray solid;
+//   background: lightblue;
+//   opacity: 0.5;
 
-  &:hover {
-    opacity: 1;
-    border: 1px white solid;
-  }
-}
+//   &:hover {
+//     opacity: 1;
+//     border: 1px white solid;
+//   }
+// }
 
 
 
@@ -343,46 +378,44 @@ header, footer {
   }
 }
 
+.nav-flex {
+  display: flex;
+  background: #242424;
+  color: white;
+  justify-content: space-between;
+  border: 1px solid #BDBDBD;
+  align-items: center;
 
-
-
-
-
-.grid-container {
-
-  .chat-grid {
-
-    .chat {
-      margin-top: auto;
-      height: 80vh;
-      width: 300px;
-      background: transparent;
-      overflow-y: scroll;
-      padding: 1.5rem;
-      scrollbar-width: none;
-      opacity: 0.7;
-    }
-
+  .navbar {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: center;
   }
 
-}
-
-
-.channels-wrapper {
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-
-  .channels-container {
-    margin-top:1.5rem;
-    width:80%;
-    height:100%;
-    display: grid;
-    grid-template-columns: 
-    repeat(auto-fill, minmax(150px, 1fr));
-    align-items: center;
-
+  ul, li {
+    display: inline;
+    padding: 0rem 1.25rem;
+    list-style: none;
+  }
+  
+  .nav-logo {
+    color: $clique-green;
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: 0.2rem;
   }
 
+  .nav-hex {
+    width:25px;
+    height:25px;
+    display: inline;
+  }
+
+  .nav-username {
+    color: $clique-green;
+    font-weight: bold;
+    font-size: 1rem;
+  }
 
 }

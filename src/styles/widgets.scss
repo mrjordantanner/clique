@@ -11,13 +11,14 @@ $clique-green: #35FF86;
 $user-color: magenta;
 $widget-hover-border: $clique-green;
 
+
 .widget-container {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height:80vh;
-    background: #232323;
+    // background: #232323;
 }
 
 
@@ -26,12 +27,11 @@ $widget-hover-border: $clique-green;
 // WIDGETS
 .widget {
     opacity: 1;
-
+    z-index: 1;
 
     &:hover {
-        opacity: 0.9;
+        opacity: 0.8;
         cursor: pointer;
-        // border: 1px solid $widget-hover-border;
     }
     
     // BALL
@@ -56,52 +56,19 @@ $widget-hover-border: $clique-green;
         }
     }
 
-    // HEX
-    // https://codepen.io/airen/pen/dXZgyq
-    .hexagon {
-        width: 80px;
-        height: 40px;
-        background: $user-color;
-        // margin: 150px auto;
-        position: relative;
+    .user-name {
+        position: absolute;
+        margin: -120px 0px 0px -50px;
+        font-family: 'Roboto', sans-serif;
+        font-size: 1rem;
+        font-weight: bold;
+        color: white;
+        text-align: right;
 
-      
-      &:before,
-      &:after {
-        content: '';
-          position: absolute;
-          width: 0;
-          height: 0;
       }
-      
-      &:before {
-        top: -25px;
-          left: 0;
-          border-left: 40px solid transparent;
-          border-right: 40px solid transparent;
-          border-bottom: 25px solid $user-color;
-      }
-      &:after {
-        bottom: -25px;
-          left: 0;
-          border-left: 40px solid transparent;
-          border-right: 40px solid transparent;
-          border-top: 25px solid $user-color;
-      }
-    }
-
-
-
 
 
 }
-
-
-
-
-
-
-
 
 
 .bg-transition {

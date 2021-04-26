@@ -1,9 +1,9 @@
 import { useDrag } from 'react-dnd';
+import Hex from '../../svg/hex-1.svg';
 
 const ItemTypes = {
     BOX: 'box',
   }
-
 
 const style = {
     border: '1px dashed gray',
@@ -33,6 +33,10 @@ export const Box = function Box({ name }) {
     const opacity = isDragging ? 1 : 1;
 
     return (
-        <div ref={drag} role="Box" style={{ ...style, opacity }} data-testid={`box-${name}`}></div>
+
+        <div ref={drag} role="Box"  data-testid={`box-${name}`}>
+            <img src={Hex} alt='hexagon'/>
+        </div>
+
     );
 };
