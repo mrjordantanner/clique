@@ -14,7 +14,7 @@ export default function MainView({ joinChannel }) {
 
 			{/* <Widget /> */}
 
-			{/* <Channels joinChannel={joinChannel} /> */}
+			<Channels joinChannel={joinChannel} />
 
 
 			</div>

@@ -15,7 +15,7 @@ const Channels = ( { joinChannel } ) => {
     }, [])
 
     if (!channels) {
-        return <Loading />
+        return <Loading />;
     }
 
     return (
@@ -23,7 +23,7 @@ const Channels = ( { joinChannel } ) => {
 			<div className='channels-container'>
 				{channels.map((c) => {
 					return <Channel 
-                        key={c._id || Date.now()} 
+                        key={c._id} 
                         id={c._id} 
                         name={c.name} 
                         messages={c.messages}

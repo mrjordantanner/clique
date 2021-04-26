@@ -26,7 +26,11 @@ function App() {
 		channel: null,
 	};
 
+	const [messages, setMessages] = useState([]);
+
 	const [activeUser, setActiveUser] = useState({});
+	const [currentChannel, setCurrentChannel] = useState(null);
+	const users = getUsers();
 
 	useEffect(() => {
 		// init();
@@ -90,8 +94,7 @@ function App() {
 	async function getUsers() {
 		const response = await fetch(`${APIurl}/users/loggedIn`);
 		const users = await response.json();
-		// console.log(`Got Users: ${users.length}`);
-		// console.log(...users);
+		console.log(`Got Users: ${users.length}`);
 		return users;
 	}
 
@@ -106,7 +109,6 @@ function App() {
 
 	function configureSocket() {
 
-		
 
 		socket.on('connection', () => {
 			console.log(`Socket connected: ${socket.id}`);
@@ -114,28 +116,39 @@ function App() {
 
 		// Receive message from server
 		socket.on('push', (message) => {
-			// Message logic here
+
+			setMessages([message]);
+
+			console.log('Message received');
 			console.log(`${message.messageData.sender}: ${message.messageData.text}`);
 		});
-	
-		// setSocket(socket);
+
 	};
 
-	// function joinChannel(channel) {
-	// 	console.log(`Attemping to join channel:`);
-	// 	console.log(channel);
-	// 	if (channel) {
-	// 		// setChannel(Object.assign({}, channel));
-	// 		setChannel(channel);
-	// 		changeTargetChannel(channel);
-	// 		localStorage.setItem('channel', channel._id);
-	// 		socket.emit('channel-join', channel._id);
-	// 		// printReport();
-	// 	}
-	// 	else {
-	// 		console.log('Cant join channel - Not found');
-	// 	}
-	// };
+	function leaveChannel() {
+		localStorage.setItem('channel', null);
+		socket.emit('channel-leave', currentChannel);
+	}
+
+	function joinChannel(channel) {
+
+		if (currentChannel) {
+			leaveChannel();
+		}
+		// user interacts with channel object and this gets called, passing in the target channel(id?)
+		// if (currentChannel) leave that channel by c
+
+		if (channel) {
+			// setChannel(Object.assign({}, channel));
+			setCurrentChannel(channel);
+			localStorage.setItem('channel', channel._id);
+			socket.emit('channel-join', channel._id);
+			// printReport();
+		}
+		else {
+			console.log('Cant join channel - Not found');
+		}
+	};
 
 	return (
 		<div>
@@ -154,17 +167,16 @@ function App() {
 
 							<article className='wireframe'>
 								<MainView 
-									// joinChannel={joinChannel} 
-									/>
+									joinChannel={joinChannel} 
+								/>
 							</article>
 
 							<aside className='sidebar-right wireframe'>
 								<Chat 
 									socket={socket} 
-									// general={general} 
-									// channel={channel} 
-									// targetChannel={targetChannel} 
-									// changeTargetChannel={changeTargetChannel} 
+									currentChannel={currentChannel}
+									messages={messages} 
+									setMessages={setMessages}
 								/>
 							</aside>
 						</div>

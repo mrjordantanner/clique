@@ -6,19 +6,23 @@ import APIurl from '../config';
 import axios from 'axios';
 
 //region [Navy]
-export default function ChannelChat( { channelId, socket } ) {
+export default function ChannelChat( { messages, setMessages, currentChannel, socket } ) {
 
 	const bottom = useRef();
     const [channel, setChannel] = useState(null);
+    // const [messages, setMessages] = useState([]);
 
 	useEffect(() => {
-		fetch(`${APIurl}/channels/${channelId}`)
+
+        if (currentChannel) {
+            fetch(`${APIurl}/channels/${currentChannel._id}`)
 			.then((res) => res.json())
 			.then((res) => setChannel(res))
 			.catch(console.error);
+        }
 
         scrollToBottom();
-	}, []);
+	}, [messages]);
 
     function scrollToBottom() {
         bottom.current?.scrollIntoView();
@@ -44,9 +48,14 @@ export default function ChannelChat( { channelId, socket } ) {
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			},
 			data: messageData,
-		}).catch(console.error);
+		})
+			.catch(console.error)
+			.then(({ data }) => {
+				setMessages(data.channel.messages);
+			})
+			.catch(console.error);
 
-		// 1) Emit message to the backend
+		// Emit message to the backend
 		socket.emit('send-message', { messageData });
 	};
 

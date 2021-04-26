@@ -6,11 +6,10 @@ import APIurl from '../config';
 import axios from 'axios';
 
 //region [Midnight]
-export default function GeneralChat( { socket } ) {
+export default function GeneralChat( { messages, setMessages, socket } ) {
 
 	const bottom = useRef();
     const [channel, setChannel] = useState(null);
-    const [messages, setMessages] = useState([]);
 
     useEffect(() => {
 		fetch(`${APIurl}/general`)

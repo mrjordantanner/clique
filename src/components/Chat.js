@@ -4,13 +4,10 @@ import GeneralChat from './GeneralChat';
 import ChannelChat from './ChannelChat';
 import ChannelTab from './ChannelTab';
 import GeneralTab from './GeneralTab';
-import APIurl from '../config';
-import axios from 'axios';
+
 
 //region [Blue]
-export default function Chat({ socket, channel }) {
-
-	const [targetChannel, setTargetChannel] = useState(null);
+export default function Chat({ messages, setMessages, socket, currentChannel }) {
 
 	// Display general chat or not
 	const [general, setGeneral] = useState(true);
@@ -28,13 +25,13 @@ export default function Chat({ socket, channel }) {
 		<div className='chat-container'>
 			<div className='tab-container'>
 				<GeneralTab showGeneral={showGeneral} />
-				<ChannelTab channel={channel} showGeneral={showGeneral} />
+				<ChannelTab currentChannel={currentChannel} showGeneral={showGeneral} />
 			</div>
 
 			{general ? (
-				<GeneralChat socket={socket} />
+				<GeneralChat socket={socket} messages={messages} setMessages={setMessages} />
 			) : (
-				<ChannelChat channel={channel} socket={socket} />
+				<ChannelChat currentChannel={currentChannel} socket={socket}  messages={messages} setMessages={setMessages}/>
 			)}
 		</div>
 	);
