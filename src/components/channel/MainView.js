@@ -12,7 +12,7 @@ export default function MainView({ joinChannel, leaveChannel }) {
 		<div className='wireframe'>
 			<div className='widget-container' ref={container}>
 
-			{/* <Widget /> */}
+			<Widget />
 
 			<Channels joinChannel={joinChannel} />
 

@@ -1,29 +1,15 @@
 import React, { useRef, useState, useEffect } from 'react';
-// import 'firebase/database';
 import Draggable from 'react-draggable';
 import anime from 'animejs';
 import useSound from 'use-sound';
 import boom from '../../audio/808_Soft.wav';
 import { useDrag } from 'react-dnd';
 
-import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil';
-import {
-	channelsState as channelsAtom,
-	channelState as channelAtom,
-	targetChannelState as targetChannelAtom,
-	messagesState as messagesAtom,
-	usersState as usersAtom,
-	activeUserState as activeUserAtom,
-	socketState as socketAtom
-} from '../../atoms';
-
 export default function Widget( { getWidgetData, pushColor } ) {
     
     const widget = useRef();
     const uid = null;
     const [play] = useSound(boom);
-
-    const [socket, setSocket] = useRecoilState(socketAtom);
 
     const grow = anime({
       targets: '.ball',
@@ -101,7 +87,7 @@ export default function Widget( { getWidgetData, pushColor } ) {
 
     return(
       <Draggable
-        // bounds='parent'
+        bounds='parent'
         onMouseDown={handleMouseDown}
         // onDrag={sendWidgetData}
         >
