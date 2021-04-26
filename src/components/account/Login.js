@@ -38,7 +38,7 @@ const Login = ( { setActiveUser } ) => {
 
 	return (
 		<div className='home'>
-			<h1 className='logo-text'>C L I Q U E</h1>
+			<h1 className='logo-text'>CLIQUE</h1>
 			<form onSubmit={handleSubmit} className='account'>
 				<input
 					onChange={handleChange}

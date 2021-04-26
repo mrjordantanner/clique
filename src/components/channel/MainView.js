@@ -5,7 +5,7 @@ import Channels from './Channels';
 import Container from '../../components/DnD/Container';
 
 
-export default function MainView({ joinChannel, leaveChannel, activeUser, currentChannel }) {
+export default function MainView({ joinChannel, leaveChannel, activeUser, currentChannel, incrementClickCounter }) {
 
     let Draggable = require('react-draggable');
 	const container = useRef();
@@ -14,20 +14,23 @@ export default function MainView({ joinChannel, leaveChannel, activeUser, curren
 		<div className=''>
 			<div className='widget-container' ref={container}>
 
-			<Widget activeUser={activeUser} />
+			<Widget activeUser={activeUser} incrementClickCounter={incrementClickCounter} />
 
-			<Channels joinChannel={joinChannel} />
+			<Channels joinChannel={joinChannel} currentChannel={currentChannel} />
 
 			{/* <Container /> */}
 
+
+
+
+			</div>
+
 			{currentChannel &&
-				<button className='channel-item' onClick={leaveChannel}>
+				<button className='leave-channel-button' onClick={leaveChannel}>
 					Leave Channel
 				</button>
 			}
 
-
-			</div>
 		</div>
 	);
 }

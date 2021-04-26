@@ -32,12 +32,6 @@ function App() {
 	const [currentChannel, setCurrentChannel] = useState(null);
 	const [general, setGeneral] = useState(true);
 
-	// let currentChannel = null;
-	// function setCurrentChannel(channel) {
-	// 	currentChannel = Object.assign({}, channel);
-	// 	console.log(`CurrentChannel_id: ${currentChannel._id}`)
-	// }
-
 	useEffect(() => {
 		// rejoinChannel();
 		loadUserData();
@@ -112,6 +106,11 @@ function App() {
 		}
 	};
 
+	function incrementClickCounter() {
+		// clicks++;
+		// localStorage.setItem('clicks', clicks);
+	}
+
 	return (
 		<div>
 			<Switch>
@@ -133,6 +132,7 @@ function App() {
 									leaveChannel={leaveChannel}
 									activeUser={activeUser}
 									currentChannel={currentChannel}
+									incrementClickCounter={incrementClickCounter}
 								/>
 							</article>
 

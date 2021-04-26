@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 // import UserSlot from './UserSlot';
 import APIurl from '../../config';
 import Loading from '../Loading';
-import Hex from '../../svg/hex-socket.svg';
+import HexSocket from '../../svg/hex-socket.svg';
+import HexSocketActive from '../../svg/hex-socket-active.svg';
 
-export default function Channel( { id, joinChannel }) {
+export default function Channel( { id, joinChannel, currentChannel }) {
 
     const [channel, setChannel] = useState(null);
 
@@ -25,12 +26,17 @@ export default function Channel( { id, joinChannel }) {
     }
 
     return (
-        <div class='channel'>
-            <div className='channel-item' onClick={click}>
-                <div className='channel-name'>{channel?.name}</div>
-                <img src={Hex} alt='hexagon' draggable="false"/>
-            </div>
-        </div>
-    )
+			<div class='channel'>
+				<div className='channel-item' onClick={click}>
+					<div className='channel-name'>{channel?.name}</div>
+
+					{currentChannel?._id === id ? (
+						<img src={HexSocketActive} alt='hexagon' draggable='false' />
+					) : (
+						<img src={HexSocket} alt='hexagon' draggable='false' />
+					)}
+				</div>
+			</div>
+		);
    
 }
