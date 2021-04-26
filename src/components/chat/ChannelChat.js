@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
-import Loading from './Loading';
-import Message from './Message';
-import MessageInput from './MessageInput';
-import APIurl from '../config';
+import Loading from '../Loading';
+import Message from '../Message';
+import MessageInput from '../MessageInput';
+import APIurl from '../../config';
 import axios from 'axios';
 
 //region [Navy]
@@ -10,26 +10,23 @@ export default function ChannelChat( { messages, setMessages, currentChannel, so
 
 	const bottom = useRef();
     const [channel, setChannel] = useState(null);
-    // const [messages, setMessages] = useState([]);
 
 	useEffect(() => {
-
-        if (currentChannel) {
-            fetch(`${APIurl}/channels/${currentChannel._id}`)
-			.then((res) => res.json())
-			.then((res) => setChannel(res))
-			.catch(console.error);
-        }
-
+		fetch(`${APIurl}/channels/${currentChannel._id}`)
+		.then((res) => res.json())
+		.then((res) => setChannel(res))
+		.catch(console.error);
+	
         scrollToBottom();
-	}, [messages]);
+	}, [messages, currentChannel]);
 
     function scrollToBottom() {
         bottom.current?.scrollIntoView();
     };
 
 	if (!channel) {
-		return <Loading />;
+		return null;
+		// return <Loading />;
 	}
 
     const handleSendMessage = (formValue) => {
@@ -37,7 +34,7 @@ export default function ChannelChat( { messages, setMessages, currentChannel, so
 			text: formValue,
 			channelId: channel._id,
 			sender: localStorage.getItem('userName'),
-			id: Date.now(),
+			id: Date.now()
 		};
 
 		// Post message to database

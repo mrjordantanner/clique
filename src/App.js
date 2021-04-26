@@ -12,7 +12,7 @@ import axios from 'axios';
 
 import MainView from './components/channel/MainView';
 import SideBar from './components/SideBar';
-import Chat from './components/Chat';
+import Chat from './components/chat/Chat';
 import Navbar from './components/Navbar';
 import Login from './components/account/Login';
 import CreateAccount from './components/account/CreateAccount';
@@ -26,39 +26,31 @@ function App() {
 		channel: null,
 	};
 
-	const [messages, setMessages] = useState([]);
-
+	const [messages, setMessages] = useState([]); 
+	// const [users, setUsers] = useState([]);
 	const [activeUser, setActiveUser] = useState({});
 	const [currentChannel, setCurrentChannel] = useState(null);
-	const users = getUsers();
+	const [general, setGeneral] = useState(true);
+
+	// let currentChannel = null;
+	// function setCurrentChannel(channel) {
+	// 	currentChannel = Object.assign({}, channel);
+	// 	console.log(`CurrentChannel_id: ${currentChannel._id}`)
+	// }
 
 	useEffect(() => {
-		// init();
+		// rejoinChannel();
 		loadUserData();
-		// joinLastChannel();
-		printReport();
 	}, []);
 
-	const socket = socketClient(APIurl);
-	configureSocket();
-
-	function printReport() {
-		// console.clear();
-		// console.log(`------`);
-		// console.log(`General Channel: ${general.name}, ${general._id}`);
-		// console.log(`Clique Channels: ${channels.length}`);
-		// console.log(`Current Clique Channel: ${channel.name}, ${channel._id}`);
-		// console.log(`Target Channel: ${targetChannel.name}, ${targetChannel._id}`);
-		// console.log(`------`);
-	}
-
 	function loadUserData() {
+		// users = getUsers();
 		const userName = localStorage.getItem('userName');
 		const userToken = localStorage.getItem('token');
 		const user = {
 			name: userName,
 			token: userToken,
-			// channel: channel,
+			channel: currentChannel,
 		};
 		if (user) {
 			setActiveUser(user);
@@ -73,23 +65,6 @@ function App() {
 		setActiveUser(blankUser);
 	}
 
-	// async function getChannels()  {
-
-	// 	const response = await fetch(`${APIurl}/channels`);
-	// 	const channels = await response.json();
-	// 	// console.log(`Got Channels: ${channels.length}`);
-	// 	// console.log(...channels);
-	// 	return channels;
-	// }
-
-	// async function getGeneral() {
-	// 	const response = await fetch(`${APIurl}/general`);
-	// 	const channel = await response.json();
-	// 	// console.log(`Got General: ${channel.name}`);
-	// 	// console.log(channel);
-	// 	return channel;
-	// }
-
 	// Get all users that are logged in
 	async function getUsers() {
 		const response = await fetch(`${APIurl}/users/loggedIn`);
@@ -98,36 +73,26 @@ function App() {
 		return users;
 	}
 
-	// function changeTargetChannel(channel) {
-	// 	// setTargetChannel(Object.assign({}, channel));
-	// 	// setTargetChannel(channel);
-	// 	setTargetChannel(channel);
-	//     printReport();
-	// 	// console.log(`Set Target Channel: ${targetChannel.name}, ${targetChannel._id}`)
-	// }
-
-
-	function configureSocket() {
-
-
-		socket.on('connection', () => {
-			console.log(`Socket connected: ${socket.id}`);
-		});
-
-		// Receive message from server
-		socket.on('push', (message) => {
-
-			setMessages([message]);
-
-			console.log('Message received');
-			console.log(`${message.messageData.sender}: ${message.messageData.text}`);
-		});
-
-	};
+	function rejoinChannel() {
+		// if (!currentChannel) {
+		// 	const channel = localStorage.getItem('channel');
+		// 	if (channel) {
+		// 		joinChannel(channel);
+		// 	}
+		// }
+	}
 
 	function leaveChannel() {
-		localStorage.setItem('channel', null);
-		socket.emit('channel-leave', currentChannel);
+		if (currentChannel) {
+			localStorage.setItem('channel', null);
+			// socket.emit('channel-leave', currentChannel);
+			console.log(`Left channel: ${currentChannel.name}`)
+			setCurrentChannel(null);
+			setGeneral(true);
+		}
+		else{
+			console.log(`Not currently in a channel.`);
+		}
 	}
 
 	function joinChannel(channel) {
@@ -135,15 +100,12 @@ function App() {
 		if (currentChannel) {
 			leaveChannel();
 		}
-		// user interacts with channel object and this gets called, passing in the target channel(id?)
-		// if (currentChannel) leave that channel by c
 
 		if (channel) {
-			// setChannel(Object.assign({}, channel));
 			setCurrentChannel(channel);
-			localStorage.setItem('channel', channel._id);
-			socket.emit('channel-join', channel._id);
-			// printReport();
+			setGeneral(false);
+			localStorage.setItem('channel', channel);
+			// socket.emit('channel-join', channel);
 		}
 		else {
 			console.log('Cant join channel - Not found');
@@ -168,15 +130,17 @@ function App() {
 							<article className='wireframe'>
 								<MainView 
 									joinChannel={joinChannel} 
+									leaveChannel={leaveChannel}
 								/>
 							</article>
 
 							<aside className='sidebar-right wireframe'>
 								<Chat 
-									socket={socket} 
 									currentChannel={currentChannel}
 									messages={messages} 
 									setMessages={setMessages}
+									general={general}
+									setGeneral={setGeneral}
 								/>
 							</aside>
 						</div>

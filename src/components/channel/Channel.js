@@ -5,13 +5,9 @@ import Loading from '../Loading';
 
 export default function Channel( { id, joinChannel }) {
 
-    // Represents chat channel in the Main View
-    // Clicking (or dragging into) it passes up the channel id
-
     const [channel, setChannel] = useState(null);
 
     useEffect(() => {
-        // let chan = channels?.find(c => c._id === channelId);
         fetch(`${APIurl}/channels/${id}`)
         .then((res) => res.json())
         .then((res) => setChannel(res))
@@ -20,7 +16,7 @@ export default function Channel( { id, joinChannel }) {
     }, [])
 
     if (!channel) {
-        return <div>{id}</div>;
+        return null;
     }
 
     const click = () => {
@@ -29,7 +25,7 @@ export default function Channel( { id, joinChannel }) {
 
     return (
         <div className='channel-item' onClick={click}>
-            <div>{channel.name}</div>
+            <div>{channel?.name}</div>
         </div>
     )
    

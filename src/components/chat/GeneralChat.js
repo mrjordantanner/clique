@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
-import Loading from './Loading';
-import Message from './Message';
-import MessageInput from './MessageInput';
-import APIurl from '../config';
+import Loading from '../Loading';
+import Message from '../Message';
+import MessageInput from '../MessageInput';
+import APIurl from '../../config';
 import axios from 'axios';
 
 //region [Midnight]
@@ -25,7 +25,8 @@ export default function GeneralChat( { messages, setMessages, socket } ) {
     };
 
 	if (!channel) {
-		return <Loading />;
+		return null;
+		// return <Loading />;
 	}
 
     const handleSendMessage = (formValue) => {
@@ -33,7 +34,7 @@ export default function GeneralChat( { messages, setMessages, socket } ) {
 			text: formValue,
 			channelId: channel._id,
 			sender: localStorage.getItem('userName'),
-			id: Date.now(),
+			id: Date.now()
 		};
 
 		// Post message to database

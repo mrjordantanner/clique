@@ -1,16 +1,16 @@
 import React from 'react';
 
-export default function ChannelTab( { channel, showGeneral } ) {
+export default function ChannelTab( { currentChannel, setGeneral } ) {
 
 	function handleClick(e) {
 		e.preventDefault();
-        showGeneral(false);
+        setGeneral(false);
 	}
 
 	return (
 		<form className='channel-tab wireframe'>
-			{channel ? (
-				<button onClick={handleClick}>{channel.name}</button>
+			{currentChannel ? (
+				<button onClick={handleClick}>{currentChannel.name}</button>
 			) : (
 				<button disabled={true}>
 					No Clique Channel

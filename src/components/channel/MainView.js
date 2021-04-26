@@ -3,7 +3,7 @@ import Widget from '../widgets/Widget';
 import '../../styles/widgets.scss';
 import Channels from './Channels';
 
-export default function MainView({ joinChannel }) {
+export default function MainView({ joinChannel, leaveChannel }) {
 
     let Draggable = require('react-draggable');
 	const container = useRef();
@@ -15,6 +15,11 @@ export default function MainView({ joinChannel }) {
 			{/* <Widget /> */}
 
 			<Channels joinChannel={joinChannel} />
+
+
+			<div className='channel-item' onClick={leaveChannel}>
+				Leave Channel
+			</div>
 
 
 			</div>
