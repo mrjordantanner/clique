@@ -187,13 +187,6 @@ body {
   }
 }
 
-.center {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-  justify-content: center;
-	margin-top: 10vh;
-}
 
 a {
 	font-size: 1rem;
@@ -213,18 +206,6 @@ a {
   }
 }
 
-.button {
-  color: black;
-  background: white;
-  max-width: 400px;
-  font-weight: 600;
-  height: 50px;
-}
-
-.button:hover {
-  color: white;
-  background: black;
-}
 
 ul, li {
   display: inline;
@@ -233,8 +214,6 @@ ul, li {
   text-align: right;
   list-style: none;
 }
-
-
 
 
 .wireframe {
@@ -285,6 +264,7 @@ header, footer {
   display: flex;
   flex-direction: column;
 
+
   input {
     font-size: 1.5rem;
     height: 40px;
@@ -292,8 +272,13 @@ header, footer {
     background: transparent;
     color: white;
     outline: none;
-    border: 2px white solid;
+    border: 1px gray solid;
     padding: 0 2rem;
+    margin: 0.5rem 0;
+
+    &:focus {
+      border: 1px $clique-green solid;
+    }
   }
   
   button {
@@ -307,20 +292,58 @@ header, footer {
     cursor: pointer;
     font-size: 1.5rem;
     border: 2px white solid;
+    margin: 0.5rem 0;
+
+    &:hover {
+      color: $clique-green;
+      border: 2px solid $clique-green;
+    }
+
+    &:active {
+      color: black;
+      background: $clique-green;
+      border: 2px solid $clique-green;
+    }
     
   }
   
-  button:disabled {
-    opacity: 0.5;
+}
+
+
+.home {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+  justify-content: center;
+	margin: 10vh 0;
+  // background-image: linear-gradient($not-black, rgb(27, 21, 103), $not-black);
+  background-image: linear-gradient($not-black, rgb(47, 80, 107), $not-black);
+  height: 75vh;
+
+  .logo-text {
+    font-size: 6rem;
+    letter-spacing: 1.5rem;
+    font-weight: 200;
+    color: white;
+  }
+
+  .header-text {
+    font-size: 2rem;
+    letter-spacing: 0.9rem;
+    // font-weight: lighter;
+    color: white;
+    margin-bottom: 3rem;
+  }
+
+  .error {
+    color: red;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 1rem;
   }
 }
 
 
-.logo-text {
-  font-size: 3rem;
-  font-weight: bold;
-  color: $clique-green;
-}
 
 
 

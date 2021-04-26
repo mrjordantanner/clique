@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import APIurl from '../../config';
-import LoginWithGoogle from './LoginWithGoogle';
 
 const Login = ( { setActiveUser } ) => {
     
@@ -24,7 +23,6 @@ const Login = ( { setActiveUser } ) => {
 		.post(`${APIurl}/users/login`, loginData)
 		.then(({ data }) => {
 			localStorage.setItem('token', data.token);
-			// localStorage.setItem('expiration', Date.now() + 360000);
 			const userData = {
 				name: loginData.name,
 				token: data.token
@@ -33,27 +31,14 @@ const Login = ( { setActiveUser } ) => {
 			localStorage.setItem('userName', loginData.name);
 			history.push('/');
 		})
-		.then(axios.patch(`${APIurl}/users/login/${loginData.name}`))  // Mark user as logged in
+		// Mark user as logged in
+		.then(axios.patch(`${APIurl}/users/login/${loginData.name}`)) 
 		.catch(() => setLoginError(true));
 	};
 
-	// useEffect(() => {
-	// 	checkForSessionExpired();
-	// }, [])
-
-	// any time we make a request using a token,
-	// compare Date.now() to localStorage.get('expiration')
-	// function checkForSessionExpired() {
-	// 	if (Date.now() > localStorage.getItem('expiration')) {
-	// 		console.log('session expired');
-	// 		history.push('/signin');
-	// 	}
-	// }
-
 	return (
-		<div className='center'>
+		<div className='home'>
 			<h1 className='logo-text'>C L I Q U E</h1>
-			<h2>Log In</h2>
 			<form onSubmit={handleSubmit} className='account'>
 				<input
 					onChange={handleChange}
@@ -72,8 +57,7 @@ const Login = ( { setActiveUser } ) => {
 					Sign In
 				</button>
 			</form>
-            {/* <LoginWithGoogle /> */}
-			{loginError && <p>Username or password not found</p>}
+			{loginError && <div className='error'>Username or password not found</div>}
 			<p>No account yet?</p><Link to={'/signup'}>Create Account</Link>
 		</div>
 	);

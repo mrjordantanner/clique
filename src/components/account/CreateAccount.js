@@ -32,9 +32,8 @@ const CreateAccount = () => {
 	};
 
 	return (
-		<div className='center'>
-			<div className='logo-text'>C L I Q U E</div>
-			<h2>Create an account</h2>
+		<div className='home'>
+			<div className='header-text'>Create an account</div>
 			<form onSubmit={handleSubmit} className='account'>
 				<input
 					onChange={handleChange}
@@ -54,7 +53,7 @@ const CreateAccount = () => {
 				</button>
 			</form>
 			<p>Already have an account?</p><Link to={'/'}>Log In Instead</Link>
-			{signUpError && <p>User already exists</p>}
+			{signUpError && <div className='error'>Sign Up Error! Please try again.</div>}
 		</div>
 	);
 };
