@@ -6,15 +6,14 @@ import boom from '../../audio/808_Soft.wav';
 import { useDrag } from 'react-dnd';
 import Hex from '../../svg/hex-1.svg';
 
+import Hexagon from '../svg/Hexagon';
+
 
 export default function Widget( { pushColor, activeUser, incrementClickCounter } ) {
     
     const widget = useRef();
     const uid = null;
     const [play] = useSound(boom);
-
-
-    
 
     // const grow = anime({
     //   targets: '.ball',
@@ -36,29 +35,29 @@ export default function Widget( { pushColor, activeUser, incrementClickCounter }
     }, [])
 
 
-    return(
+    return (
+			<Draggable
+				// axis="x"
+				// bounds='parent'
+				// handle=".handle"
+				// defaultPosition={{x: 0, y: 0}}
+				// position={null}
+				// grid={[125, 125]}
+				// scale={1}
+				onMouseDown={handleMouseDown}
+				// onStart={handleStart}
+				// onDrag={handleDrag}
+				// onStop={handleStop}
+			>
+				<div className='widget' ref={widget}>
+					{/* <img src={Hex} alt='hexagon' draggable="false"/> */}
 
-    <Draggable
-      // axis="x"
-      // bounds='parent'
-      // handle=".handle"
-      // defaultPosition={{x: 0, y: 0}}
-      // position={null}
-      // grid={[125, 125]}
-      // scale={1}
-      onMouseDown={handleMouseDown}
-      // onStart={handleStart}
-      // onDrag={handleDrag}
-      // onStop={handleStop}
-    >
+          <Hexagon />
 
-    <div className='widget' ref={widget} >
-      <img src={Hex} alt='hexagon' draggable="false"/>
-      <div class='user-name'>{activeUser.name}</div>
-    </div>
-  </Draggable>
-
-    )
+					<div class='user-name'>{activeUser.name}</div>
+				</div>
+			</Draggable>
+		);
     
 
 };

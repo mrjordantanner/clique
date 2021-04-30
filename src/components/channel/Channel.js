@@ -4,6 +4,8 @@ import APIurl from '../../config';
 import Loading from '../Loading';
 import HexSocket from '../../svg/hex-socket.svg';
 import HexSocketActive from '../../svg/hex-socket-active.svg';
+import HexNode from '../svg/HexNode';
+import HexNodeActive from '../svg/HexNodeActive';
 
 export default function Channel( { id, joinChannel, currentChannel }) {
 
@@ -30,11 +32,7 @@ export default function Channel( { id, joinChannel, currentChannel }) {
 				<div className='channel-item' onClick={click}>
 					<div className='channel-name'>{channel?.name}</div>
 
-					{currentChannel?._id === id ? (
-						<img src={HexSocketActive} alt='hexagon' draggable='false' />
-					) : (
-						<img src={HexSocket} alt='hexagon' draggable='false' />
-					)}
+					{currentChannel?._id === id ? <HexNodeActive /> : <HexNode />}
 				</div>
 			</div>
 		);

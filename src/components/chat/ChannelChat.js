@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import Loading from '../Loading';
-import Message from '../Message';
-import MessageInput from '../MessageInput';
+import Message from './Message';
+import MessageInput from '../chat/MessageInput';
 import APIurl from '../../config';
 import axios from 'axios';
 

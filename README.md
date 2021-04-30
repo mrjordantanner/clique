@@ -28,4 +28,4 @@ As a user, I want to see and interact with other users in a simple yet unique an
 
 ### Feedback & Contributions
 
-As mentioned, this app is far from complete and there is a lot of work to be done.  I welcome any feedback or contributions to the project, especially in regards to adhering to best practices, minimizing code redundancies, improving performance (especially network related), adding or improving features, and commenting and documentation.
+This app is far from complete and there is a lot of work to be done.  I welcome any feedback or contributions to the project, especially in regards to adhering to best practices, minimizing code redundancies, improving performance (especially network related), adding or improving features, and commenting and documentation.
