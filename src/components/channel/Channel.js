@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-// import UserSlot from './UserSlot';
+import ChannelSlot from './ChannelSlot';
 import APIurl from '../../config';
 import Loading from '../Loading';
-import HexSocket from '../../svg/hex-socket.svg';
-import HexSocketActive from '../../svg/hex-socket-active.svg';
 import HexNode from '../svg/HexNode';
 import HexNodeActive from '../svg/HexNodeActive';
 
@@ -23,17 +21,26 @@ export default function Channel( { id, joinChannel, currentChannel }) {
         return null;
     }
 
-    const click = () => {
+    const handleClick = () => {
         joinChannel(channel);
     }
 
     return (
-			<div class='channel'>
-				<div className='channel-item' onClick={click}>
-					<div className='channel-name'>{channel?.name}</div>
+			<div className='channel'>
+                <p className='channel-name'>{channel?.name}</p>         
+
+
+				{/* <div className='channel-slot' onClick={click}>
+					
 
 					{currentChannel?._id === id ? <HexNodeActive /> : <HexNode />}
-				</div>
+				</div> */}
+
+
+                <ChannelSlot handleClick={handleClick} channel={channel} currentChannel={currentChannel} channelId={id} />
+
+
+
 			</div>
 		);
    

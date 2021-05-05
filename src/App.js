@@ -106,8 +106,9 @@ function App() {
 		}
 	};
 
-	function incrementClickCounter() {
-		// clicks++;
+	function addClick() {
+		//clicks++;
+		console.log('click');
 		// localStorage.setItem('clicks', clicks);
 	}
 
@@ -123,7 +124,7 @@ function App() {
 							</header>
 
 							<aside className='sidebar-left wireframe'>
-								<SideBar />
+								<SideBar currentChannel={currentChannel} leaveChannel={leaveChannel} />
 							</aside>
 
 							<article className=''>
@@ -132,7 +133,7 @@ function App() {
 									leaveChannel={leaveChannel}
 									activeUser={activeUser}
 									currentChannel={currentChannel}
-									incrementClickCounter={incrementClickCounter}
+									addClick={addClick}
 								/>
 							</article>
 

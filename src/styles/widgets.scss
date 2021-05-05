@@ -24,6 +24,8 @@ $widget-hover-border: $clique-green;
 
 // WIDGETS
 .widget {
+    position: absolute;
+    transform-origin: center;
     opacity: 1;
     z-index: 1;
 
@@ -33,7 +35,7 @@ $widget-hover-border: $clique-green;
     }
 
     .svg {
-        transition: all 0.05s;
+        transition: all 0.05s;    transform-origin: center;
 
         &:active {
             width: 120px;

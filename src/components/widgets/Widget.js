@@ -9,7 +9,7 @@ import Hex from '../../svg/hex-1.svg';
 import Hexagon from '../svg/Hexagon';
 
 
-export default function Widget( { pushColor, activeUser, incrementClickCounter } ) {
+export default function Widget( { pushColor, activeUser, addClick } ) {
     
     const widget = useRef();
     const uid = null;
@@ -24,7 +24,7 @@ export default function Widget( { pushColor, activeUser, incrementClickCounter }
 
     function handleMouseDown(e) {
       e.preventDefault();
-      incrementClickCounter();
+      addClick();
       // play();
       // grow.restart();
       // pushColor();
@@ -54,7 +54,7 @@ export default function Widget( { pushColor, activeUser, incrementClickCounter }
 
           <Hexagon />
 
-					<div class='user-name'>{activeUser.name}</div>
+					{/* <div className='user-name'>{activeUser.name}</div> */}
 				</div>
 			</Draggable>
 		);

@@ -4,7 +4,7 @@ export default function Hexagon() {
     return (
         <div>
             <svg
-                class='svg'
+                className='svg'
                 width='94'
                 height='108'
                 viewBox='0 0 94 108'
