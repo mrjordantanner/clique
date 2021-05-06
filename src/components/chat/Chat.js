@@ -14,6 +14,7 @@ export default function Chat({
 	messages,
 	setMessages,
 	currentChannel,
+	activeUser
 }) {
 
 	const socket = socketClient(APIurl);
@@ -47,6 +48,7 @@ export default function Chat({
 					socket={socket}
 					messages={messages}
 					setMessages={setMessages}
+					activeUser={activeUser}
 				/>
 			) : (
 				<ChannelChat
@@ -54,6 +56,7 @@ export default function Chat({
 					currentChannel={currentChannel}
 					messages={messages}
 					setMessages={setMessages}
+					activeUser={activeUser}
 				/>
 			)}
 		

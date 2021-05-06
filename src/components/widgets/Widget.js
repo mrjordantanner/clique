@@ -4,7 +4,6 @@ import anime from 'animejs';
 import useSound from 'use-sound';
 import boom from '../../audio/808_Soft.wav';
 import { useDrag } from 'react-dnd';
-import Hex from '../../svg/hex-1.svg';
 
 import Hexagon from '../svg/Hexagon';
 

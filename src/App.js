@@ -23,11 +23,14 @@ function App() {
 	const blankUser = {
 		name: null,
 		token: null,
+		loggedIn: false,
 		channel: null,
+		xp: 0,
+		widgets: []
 	};
 
 	const [messages, setMessages] = useState([]); 
-	// const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState([]);
 	const [activeUser, setActiveUser] = useState({});
 	const [currentChannel, setCurrentChannel] = useState(null);
 	const [general, setGeneral] = useState(true);
@@ -37,17 +40,22 @@ function App() {
 		loadUserData();
 	}, []);
 
+	// Reloads userData from localStorage if user reloads browser, closed and reopened it, etc.
 	function loadUserData() {
-		// users = getUsers();
-		const userName = localStorage.getItem('userName');
-		const userToken = localStorage.getItem('token');
-		const user = {
-			name: userName,
-			token: userToken,
-			channel: currentChannel,
-		};
-		if (user) {
-			setActiveUser(user);
+		const activeUserId = localStorage.getItem('activeUserId');
+		if (activeUserId) {
+			axios
+			.get(`${APIurl}/users/${activeUserId}`)
+			.then((user) => {
+				if (user) {
+					setActiveUser(user);
+					console.log(`Username: ${user.name}`);
+					console.log(`XP: ${user.xp}`);
+					console.log(`Token: ${user.token}`);
+					console.log(`Channel: ${user.channel?._id}`);
+					console.log(`Widgets: ${user.widgets?.length}`);
+				}
+			})
 		}
 	}
 
@@ -60,21 +68,16 @@ function App() {
 	}
 
 	// Get all users that are logged in
-	async function getUsers() {
-		const response = await fetch(`${APIurl}/users/loggedIn`);
-		const users = await response.json();
+	function getUsers() {
+		axios
+		.get(`${APIurl}/users/loggedIn`)
+		.then((users) => setUsers(users))
+		.catch((err) => console.error(err));
+	
 		console.log(`Got Users: ${users.length}`);
-		return users;
 	}
 
-	function rejoinChannel() {
-		// if (!currentChannel) {
-		// 	const channel = localStorage.getItem('channel');
-		// 	if (channel) {
-		// 		joinChannel(channel);
-		// 	}
-		// }
-	}
+
 
 	function leaveChannel() {
 		if (currentChannel) {
@@ -89,6 +92,9 @@ function App() {
 		}
 	}
 
+
+
+	
 	function joinChannel(channel) {
 
 		if (currentChannel) {
@@ -105,6 +111,13 @@ function App() {
 			console.log('Cant join channel - Not found');
 		}
 	};
+
+
+
+
+
+
+
 
 	function addClick() {
 		//clicks++;
@@ -144,6 +157,7 @@ function App() {
 									setMessages={setMessages}
 									general={general}
 									setGeneral={setGeneral}
+									activeUser={activeUser}
 								/>
 							</aside>
 						</div>

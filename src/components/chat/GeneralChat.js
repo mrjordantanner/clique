@@ -6,7 +6,7 @@ import APIurl from '../../config';
 import axios from 'axios';
 
 //region [Midnight]
-export default function GeneralChat( { messages, setMessages, socket } ) {
+export default function GeneralChat( { messages, setMessages, socket, activeUser } ) {
 
 	const bottom = useRef();
     const [channel, setChannel] = useState(null);
@@ -33,7 +33,7 @@ export default function GeneralChat( { messages, setMessages, socket } ) {
 		const messageData = {
 			text: formValue,
 			channelId: channel._id,
-			sender: localStorage.getItem('userName'),
+			sender: activeUser.name,
 			id: Date.now()
 		};
 

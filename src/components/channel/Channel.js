@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import ChannelSlot from './ChannelSlot';
 import APIurl from '../../config';
-import Loading from '../Loading';
-import HexNode from '../svg/HexNode';
-import HexNodeActive from '../svg/HexNodeActive';
+// import Loading from '../Loading';
+// import HexNode from '../svg/HexNode';
+// import HexNodeActive from '../svg/HexNodeActive';
 
 export default function Channel( { id, joinChannel, currentChannel }) {
+
+    // Chat channel that users can join
+    // Represented by a cluster of channelSlots users can socket into
 
     const [channel, setChannel] = useState(null);
 
@@ -29,16 +32,17 @@ export default function Channel( { id, joinChannel, currentChannel }) {
 			<div className='channel'>
                 <p className='channel-name'>{channel?.name}</p>         
 
-
-				{/* <div className='channel-slot' onClick={click}>
-					
-
-					{currentChannel?._id === id ? <HexNodeActive /> : <HexNode />}
-				</div> */}
-
-
-                <ChannelSlot handleClick={handleClick} channel={channel} currentChannel={currentChannel} channelId={id} />
-
+                {channel?.channelSlots?.map((slot) => {
+				return (
+					<ChannelSlot
+						key={slot._id}
+						id={slot._id}
+						handleClick={handleClick}
+						channel={channel}
+						currentChannel={currentChannel}
+					/>
+				);
+			})}
 
 
 			</div>

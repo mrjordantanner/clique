@@ -98,6 +98,8 @@ header, footer {
     // margin-top:1.5rem;
     width:100%;
     height:100%;
+    display: flex;
+    flex-direction: row;
     // display: grid;
     // grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     // align-items: center;
@@ -432,13 +434,44 @@ header, footer {
 // HOME / LANDING PAGE
 .home {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 	margin: 10vh 0;
   // background-image: linear-gradient($not-black, rgb(27, 21, 103), $not-black);
-  background-image: linear-gradient($not-black, rgb(69, 42, 78), $not-black);
+  // background-image: linear-gradient($not-black, rgb(69, 42, 78), $not-black);
   height: 75vh;
+  border: 1px lightgrey solid;
+
+  .left {
+    height: 100%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px red solid;
+    padding: 1rem;
+
+    .tagline {
+      font-size: 1.25rem;
+      width: 70%;
+      text-align: center;
+  
+    }
+  }
+
+  .right {
+    height: 100%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px blue solid;
+  }
+
+
 
   .logo-text {
     font-size: 6rem;

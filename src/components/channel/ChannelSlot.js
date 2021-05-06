@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import APIurl from '../../config';
-import Loading from '../Loading';
+import React, { useState } from 'react';
 import HexNode from '../svg/HexNode';
 import HexNodeActive from '../svg/HexNodeActive';
 
 export default function ChannelSlot ( { channelId, handleClick, channel, currentChannel }) {
+
+    // Represents a single slot that a user can occupy in the channel
 
     const click = () => {
         handleClick();
@@ -12,7 +12,7 @@ export default function ChannelSlot ( { channelId, handleClick, channel, current
 
 
 
-    // Represents a single slot that a user can occupy in the channel
+
 
 
 

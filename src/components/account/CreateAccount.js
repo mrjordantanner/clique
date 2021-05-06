@@ -33,27 +33,33 @@ const CreateAccount = () => {
 
 	return (
 		<div className='home'>
-			<div className='header-text'>Create an account</div>
-			<form onSubmit={handleSubmit} className='account'>
-				<input
-					onChange={handleChange}
-					name='name'
-					value={newUser.name}
-					placeholder='username'
-				/>
-				<input
-					onChange={handleChange}
-					type='password'
-					name='password'
-					value={newUser.password}
-					placeholder='password'
-				/>
-				<button className='button' id='button' type='submit'>
-					Sign Up
-				</button>
-			</form>
-			<p>Already have an account?</p><Link to={'/'}>Log In Instead</Link>
-			{signUpError && <div className='error'>Sign Up Error! Please try again.</div>}
+
+			<div className='left'>
+				<div className='header-text'>Create an account</div>
+			</div>
+
+			<div className='right'>
+				<form onSubmit={handleSubmit} className='account'>
+					<input
+						onChange={handleChange}
+						name='name'
+						value={newUser.name}
+						placeholder='username'
+					/>
+					<input
+						onChange={handleChange}
+						type='password'
+						name='password'
+						value={newUser.password}
+						placeholder='password'
+					/>
+					<button className='button' id='button' type='submit'>
+						Sign Up
+					</button>
+				</form>
+				<p>Already have an account?</p><Link to={'/'}>Log In Instead</Link>
+				{signUpError && <div className='error'>Sign Up Error! Please try again.</div>}
+			</div>
 		</div>
 	);
 };

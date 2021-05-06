@@ -21,24 +21,30 @@ const Login = ( { setActiveUser } ) => {
 		event.preventDefault();
 		axios
 		.post(`${APIurl}/users/login`, loginData)
+		// Patch user data with token and loggedIn status
+		.then(({ data }) => axios.patch(`${APIurl}/users/name/${loginData.name}`, {
+			token: data.token,
+			loggedIn: true,
+		}))
+		// Save userData for local use
 		.then(({ data }) => {
-			localStorage.setItem('token', data.token);
-			const userData = {
-				name: loginData.name,
-				token: data.token
-			}   
-			setActiveUser(userData);
-			localStorage.setItem('userName', loginData.name);
-			history.push('/');
+			setActiveUser(data);
+			localStorage.setItem('activeUserId', data._id);
 		})
-		// Mark user as logged in
-		.then(axios.patch(`${APIurl}/users/login/${loginData.name}`)) 
+		// Push user to main view
+		.then(history.push('/'))
 		.catch(() => setLoginError(true));
 	};
 
 	return (
 		<div className='home'>
-			<h1 className='logo-text'>CLIQUE</h1>
+
+		<div className='left'>
+			<div className='logo-text'>CLIQUE</div>
+			<div className='tagline'>The chat app that visualizes people and the spaces where they hangout in a new way.</div>
+		</div>
+
+		<div className='right'>
 			<form onSubmit={handleSubmit} className='account'>
 				<input
 					onChange={handleChange}
@@ -59,6 +65,7 @@ const Login = ( { setActiveUser } ) => {
 			</form>
 			{loginError && <div className='error'>Username or password not found</div>}
 			<p>No account yet?</p><Link to={'/signup'}>Create Account</Link>
+			</div>
 		</div>
 	);
 };

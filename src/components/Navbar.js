@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import Hex from '../svg/hex-1.svg';
 
 export default function Navbar( { handleLogout, activeUser } ) {
 
@@ -18,7 +17,7 @@ export default function Navbar( { handleLogout, activeUser } ) {
                 <ul>
                     {activeUser.token &&
                         <>
-                            <li className='nav-username'><img src={Hex} alt='hexagon' draggable="false" className='nav-hex' />{activeUser.name}</li>
+                            <li className='nav-username'>{activeUser.name}</li>
                             <li><Link className='nav-link' to='/' onClick={handleLogout}>Log out</Link></li>
                            
                         </>
