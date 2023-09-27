@@ -1,7 +1,7 @@
 # Clique
 > Full-stack chat room application that visualizes users and chat rooms in a simple and fun way.  
 
-This app is still currently in development and a live demo should be available by June 2021!
+This app is still currently in development.
 
 ![Screen Shot 2021-04-21 at 11 58 50 AM](https://user-images.githubusercontent.com/50030252/116337837-62418880-a7a0-11eb-86d7-2617c78f6795.png)
 
